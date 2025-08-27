@@ -7,5 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class MonHoc extends Model
 {
-    use HasFactory;
+    protected $fillable = ['ten','mo_ta'];
+
+    public function deThis()
+    {
+        return $this->hasMany(DeThi::class);
+    }
 }

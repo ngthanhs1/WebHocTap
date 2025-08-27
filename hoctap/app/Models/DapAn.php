@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DapAn extends Model
 {
-    use HasFactory;
+    protected $fillable = ['cau_hoi_id','noi_dung','dung'];
+
+    public function cauHoi() { return $this->belongsTo(CauHoi::class); }
 }
