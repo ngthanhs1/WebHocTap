@@ -11,9 +11,28 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('thongke_', function (Blueprint $table) {
+        Schema::create('thongke', function (Blueprint $table) {
             $table->id();
+
+            // Người làm chủ đề
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+
+            // Chủ đề được làm
+            $table->foreignId('topic_id')->constrained()->cascadeOnDelete();
+
+            // Số câu đúng
+            $table->integer('score')->default(0);
+
+            // Tổng số câu
+            $table->integer('total_questions')->default(0);
+
+            // Thời gian bắt đầu / kết thúc
+            $table->timestamp('started_at')->nullable();
+            $table->timestamp('finished_at')->nullable();
+
             $table->timestamps();
+
+            $table->index(['user_id','topic_id']);
         });
     }
 
@@ -22,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('thongke_');
+        Schema::dropIfExists('thongke');
     }
 };

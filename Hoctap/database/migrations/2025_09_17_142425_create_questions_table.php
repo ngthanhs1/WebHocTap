@@ -13,7 +13,17 @@ return new class extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
+
+            // Chủ đề mà câu hỏi thuộc về
+            $table->foreignId('topic_id')->constrained()->cascadeOnDelete();
+
+            // Nội dung câu hỏi
+            $table->longText('content');
+
             $table->timestamps();
+
+            // Index để tìm nhanh theo topic
+            $table->index('topic_id');
         });
     }
 

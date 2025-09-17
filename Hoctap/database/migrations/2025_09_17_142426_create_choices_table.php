@@ -13,7 +13,20 @@ return new class extends Migration
     {
         Schema::create('choices', function (Blueprint $table) {
             $table->id();
+
+            // Câu hỏi mà đáp án thuộc về
+            $table->foreignId('question_id')->constrained()->cascadeOnDelete();
+
+            // Nội dung đáp án
+            $table->longText('content');
+
+            // Đúng hay sai: 1 = đúng, 0 = sai
+            $table->boolean('is_correct')->default(false);
+
             $table->timestamps();
+
+            // Index để tìm nhanh theo câu hỏi
+            $table->index('question_id');
         });
     }
 
