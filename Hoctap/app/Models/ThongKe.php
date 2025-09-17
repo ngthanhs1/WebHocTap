@@ -5,14 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Thongke extends Model
+class ThongKe extends Model
 {
     use HasFactory;
 
+    protected $table = 'thongke';
+
     protected $fillable = [
-        'user_id', 'topic_id',
-        'score', 'total_questions',
-        'started_at', 'finished_at',
+        'user_id','topic_id','score','total_questions',
+        'started_at','finished_at'
     ];
 
     protected $casts = [
@@ -20,9 +21,8 @@ class Thongke extends Model
         'finished_at' => 'datetime',
     ];
 
-    // Quan hệ
-    public function user()  { return $this->belongsTo(User::class); }
-    public function topic() { return $this->belongsTo(Topic::class); }
+    public function user(){ return $this->belongsTo(User::class); }
+    public function topic(){ return $this->belongsTo(Topic::class); }
 
     // % đúng = score / total_questions * 100
     public function getAccuracyAttribute(): float
