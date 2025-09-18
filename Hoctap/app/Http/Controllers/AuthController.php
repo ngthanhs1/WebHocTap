@@ -9,9 +9,7 @@ class AuthController extends Controller
 {
     public function showLoginForm()
     {
-        // nếu đã đăng nhập thì đẩy về trang chính
-        if (Auth::check()) return redirect()->route('thongke.index');
-    return view('auth.login');
+        return view('login');
     }
 
     public function login(Request $request)

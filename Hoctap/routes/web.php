@@ -8,8 +8,12 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ChoicesController;
 use App\Http\Controllers\ThongKeController;
 
+Route::get('/', function () {
+    return redirect()->route('login');
+});
 
 Route::get('/login',  [AuthController::class, 'showLoginForm'])->name('login');
+
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout',[AuthController::class, 'logout'])->name('logout');
 
