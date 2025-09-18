@@ -15,7 +15,12 @@ Route::get('/', function () {
 Route::get('/login',  [AuthController::class, 'showLoginForm'])->name('login');
 
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-Route::post('/logout',[AuthController::class, 'logout'])->name('logout');
+
+use App\Http\Controllers\RegisterController;
+
+Route::get('/logout', [RegisterController::class, 'showForm'])->name('logout');
+Route::post('/logout', [RegisterController::class, 'register'])->name('logout.post');
+Route::post('/signout',[AuthController::class, 'logout'])->name('signout');
 
 Route::get('/Thuvien','App\Http\Controllers\ThuvienController@displayThuvien');
 
