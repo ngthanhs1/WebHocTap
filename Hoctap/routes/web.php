@@ -1,6 +1,8 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TopicController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ChoicesController;

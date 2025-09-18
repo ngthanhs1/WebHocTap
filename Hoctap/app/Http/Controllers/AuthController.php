@@ -11,29 +11,29 @@ class AuthController extends Controller
     {
         // nếu đã đăng nhập thì đẩy về trang chính
         if (Auth::check()) return redirect()->route('thongke.index');
-        return view('auth.login');
+    return view('auth.login');
     }
 
     public function login(Request $request)
     {
         $cred = $request->validate([
-            'email'    => ['required','email'],
-            'password' => ['required','string'],
-            'remember' => ['nullable','boolean'],
+            'usergmail' => ['required','string','max:50'],
+            'password'  => ['required','string'],
+            'remember'  => ['nullable','boolean'],
         ]);
 
         $remember = (bool)($cred['remember'] ?? false);
         unset($cred['remember']);
 
-        if (Auth::attempt($cred, $remember)) {
+        if (Auth::attempt(['usergmail' => $cred['usergmail'], 'password' => $cred['password']], $remember)) {
             $request->session()->regenerate();
             return redirect()->intended(route('thongke.index'))
                    ->with('ok','Đăng nhập thành công');
         }
 
         return back()->withErrors([
-            'email' => 'Email hoặc mật khẩu không đúng.',
-        ])->onlyInput('email');
+            'usergmail' => 'Tài khoản hoặc mật khẩu không đúng.',
+        ])->onlyInput('usergmail');
     }
 
     public function logout(Request $request)

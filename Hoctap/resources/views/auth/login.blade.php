@@ -35,8 +35,8 @@
       @csrf
 
       <div class="form-group">
-        <label for="email">Gmail</label>
-        <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus>
+        <label for="usergmail">Tài khoản Gmail</label>
+        <input type="text" id="usergmail" name="usergmail" value="{{ old('usergmail') }}" required autofocus maxlength="50">
       </div>
 
       <div class="form-group">
