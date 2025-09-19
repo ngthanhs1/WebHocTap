@@ -15,7 +15,7 @@ class Topic extends Model
     protected $fillable = ['user_id', 'name', 'slug'];
 
     // ─── Quan hệ ────────────────────────────────────────────────────────────────
-    public function user()      { return $this->belongsTo(User::class); }
+    public function user()      { return $this->belongsTo(User::class, 'user_id', 'usergmail'); }
     public function questions() { return $this->hasMany(Question::class); }
     public function sessions()  { return $this->hasMany(PracticeSession::class); }
 

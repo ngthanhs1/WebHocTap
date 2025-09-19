@@ -16,40 +16,65 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Tạo 1 user test
-        $user = User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('12345678'),
-        ]);
+        // Tạo tài khoản mặc định có thể đăng nhập
+        $user = User::updateOrCreate(
+            ['usergmail' => 'admin@example.com'],
+            [
+                'username' => 'Admin User',
+                'password' => bcrypt('123456'), // Mật khẩu: 123456
+            ]
+        );
 
-        // Tạo 1 chủ đề
-        $topic = Topic::create([
-            'user_id' => $user->id,
-            'name'    => 'Toán cơ bản',
-            'slug'    => 'toan-co-ban',
-        ]);
+        // Tạo thêm tài khoản test
+        $testUser = User::updateOrCreate(
+            ['usergmail' => 'user@test.com'],
+            [
+                'username' => 'Test User',
+                'password' => bcrypt('password'), // Mật khẩu: password
+            ]
+        );
 
-        // Thêm 1 câu hỏi
-        $question = $topic->questions()->create([
-            'content' => '2 + 2 = ?',
-        ]);
+        // Tạo 1 chủ đề cho admin
+        $topic = Topic::updateOrCreate(
+            [
+                'user_id' => $user->usergmail, // Sử dụng usergmail làm foreign key
+                'name'    => 'Toán cơ bản',
+            ],
+            [
+                'slug'    => 'toan-co-ban',
+            ]
+        );
 
-        // Thêm các đáp án cho câu hỏi
+        // Thêm 1 câu hỏi cho chủ đề
+        $question = $topic->questions()->firstOrCreate(
+            ['content' => '2 + 2 = ?']
+        );
+
+        // Xóa các choices cũ và tạo mới
+        $question->choices()->delete();
         $question->choices()->createMany([
             ['content' => '3', 'is_correct' => false],
             ['content' => '4', 'is_correct' => true],
             ['content' => '5', 'is_correct' => false],
+            ['content' => '6', 'is_correct' => false],
         ]);
 
-        // Thêm 1 bản ghi thống kê (giả sử user làm đúng 7/10 câu)
-        ThongKe::create([
-            'user_id'         => $user->id,
-            'topic_id'        => $topic->id,
-            'score'           => 7,
-            'total_questions' => 10,
-            'started_at'      => now(),
-            'finished_at'     => now(),
-        ]);
+        // Thêm 1 bản ghi thống kê
+        ThongKe::updateOrCreate(
+            [
+                'user_id'  => $user->usergmail,
+                'topic_id' => $topic->id,
+            ],
+            [
+                'score'           => 7,
+                'total_questions' => 10,
+                'started_at'      => now(),
+                'finished_at'     => now(),
+            ]
+        );
+
+        $this->command->info('Đã tạo tài khoản mặc định:');
+        $this->command->info('Email: admin@example.com | Password: 123456');
+        $this->command->info('Email: user@test.com | Password: password');
     }
 }

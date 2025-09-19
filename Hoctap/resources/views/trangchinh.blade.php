@@ -77,9 +77,9 @@
                 </div>
                 
                 <div class="tabs">
-                    <button class="tab active">Created (11/20)</button>
-                    <button class="tab">Draft (9)</button>
-                    <button class="tab">Archived (5)</button>
+                    <button class="tab active">Created ({{ $topics->count() }})</button>
+                    <button class="tab">Draft (0)</button>
+                    <button class="tab">Archived (0)</button>
                 </div>
                 
                 <div class="content-controls">
@@ -94,62 +94,42 @@
                         <option>Lần cập nhật cuối</option>
                     </select>
                 </div>
-                        <div class="activity-stats">
-                            <div class="activity-time">1 tháng trước</div>
-                        </div>
-                        <div class="activity-actions">
-                            <button class="action-btn">✏️ Chỉnh sửa</button>
-                            <button class="action-btn">⋯</button>
-                        </div>
-                    </div>
-                    
-                    <div class="activity-item">
-                        <input type="checkbox" class="activity-checkbox">
-                        <div class="activity-icon">📊</div>
-                        <div class="activity-content">
-                            <div class="activity-title">bigdata-3</div>
-                            <div class="activity-meta">
-                                <span>🌟</span>
-                                <span>45 Qs</span>
-                                <span>•</span>
-                                <span>Other</span>
-                                <span>•</span>
-                                <span>Đại học</span>
+
+                <div class="activities-list">
+                    @if($topics->count() > 0)
+                        @foreach($topics as $topic)
+                            <div class="activity-item">
+                                <input type="checkbox" class="activity-checkbox">
+                                <div class="activity-icon">📊</div>
+                                <div class="activity-content">
+                                    <div class="activity-title">{{ $topic->name }}</div>
+                                    <div class="activity-meta">
+                                        <span>🌟</span>
+                                        <span>{{ $topic->questions_count }} Qs</span>
+                                        <span>•</span>
+                                        <span>{{ $topic->slug }}</span>
+                                        <span>•</span>
+                                        <span>Học tập</span>
+                                    </div>
+                                </div>
+                                <div class="activity-stats">
+                                    <div class="activity-time">{{ $topic->created_at->diffForHumans() }}</div>
+                                </div>
+                                <div class="activity-actions">
+                                    <button class="action-btn primary">▶️ Chơi</button>
+                                    <button class="action-btn">✏️ Sửa</button>
+                                    <button class="action-btn">⋯</button>
+                                </div>
                             </div>
+                        @endforeach
+                    @else
+                        <div class="empty-state" style="text-align: center; padding: 40px; color: #666;">
+                            <div style="font-size: 48px; margin-bottom: 16px;">📝</div>
+                            <h3>Chưa có chủ đề nào</h3>
+                            <p>Hãy tạo chủ đề đầu tiên của bạn!</p>
+                            <a href="{{ route('cauhoi.create') }}" style="margin-top: 16px; display: inline-block; padding: 12px 24px; background: #667eea; color: white; text-decoration: none; border-radius: 8px;">Tạo ngay</a>
                         </div>
-                        <div class="activity-stats">
-                            <div class="activity-time">1 tháng trước</div>
-                        </div>
-                        <div class="activity-actions">
-                            <button class="action-btn primary">▶️ Chơi</button>
-                            <button class="action-btn">🔗</button>
-                            <button class="action-btn">⋯</button>
-                        </div>
-                    </div>
-                    
-                    <div class="activity-item">
-                        <input type="checkbox" class="activity-checkbox">
-                        <div class="activity-icon">📊</div>
-                        <div class="activity-content">
-                            <div class="activity-title">ktpm-5</div>
-                            <div class="activity-meta">
-                                <span>🌟</span>
-                                <span>15 Qs</span>
-                                <span>•</span>
-                                <span>Other</span>
-                                <span>•</span>
-                                <span>Đại học</span>
-                            </div>
-                        </div>
-                        <div class="activity-stats">
-                            <div class="activity-time">2 tháng trước</div>
-                        </div>
-                        <div class="activity-actions">
-                            <button class="action-btn primary">▶️ Chơi</button>
-                            <button class="action-btn">🔗</button>
-                            <button class="action-btn">⋯</button>
-                        </div>
-                    </div>
+                    @endif
                 </div>
             </div>
         </main>

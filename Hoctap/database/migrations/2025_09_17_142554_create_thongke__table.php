@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('thongke', function (Blueprint $table) {
             $table->id();
 
-            // Người làm chủ đề
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            // Người làm chủ đề - sử dụng string để tham chiếu đến usergmail
+            $table->string('user_id', 50);
 
             // Chủ đề được làm
             $table->foreignId('topic_id')->constrained()->cascadeOnDelete();
@@ -32,6 +32,8 @@ return new class extends Migration
 
             $table->timestamps();
 
+            // Tạo foreign key constraint cho user_id
+            $table->foreign('user_id')->references('usergmail')->on('users')->cascadeOnDelete();
             $table->index(['user_id','topic_id']);
         });
     }
