@@ -25,7 +25,7 @@ class AuthController extends Controller
 
         if (Auth::attempt(['usergmail' => $cred['usergmail'], 'password' => $cred['password']], $remember)) {
             $request->session()->regenerate();
-            return redirect()->intended(route('thongke.index'))
+            return redirect()->intended(route('trangchinh'))
                    ->with('ok','Đăng nhập thành công');
         }
 

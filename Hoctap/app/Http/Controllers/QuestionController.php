@@ -3,10 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Topic;
+use App\Models\Question;
 use Illuminate\Http\Request;
 
 class QuestionController extends Controller
 {
+    // Hiển thị trang tạo câu hỏi
+    public function create()
+    {
+        return view('cauhoi');
+    }
+
+    // Lưu danh sách câu hỏi vào session
+    public function saveToSession(Request $request)
+    {
+        $questions = $request->input('questions', []);
+        session(['quiz_questions' => $questions]);
+        
+        return response()->json(['success' => true]);
+    }
+
     // Thêm 1 câu hỏi + nhiều đáp án vào topic
     public function store(Request $request, Topic $topic)
     {

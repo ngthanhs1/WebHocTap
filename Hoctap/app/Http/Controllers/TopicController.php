@@ -19,7 +19,12 @@ class TopicController extends Controller
     // Form tạo chủ đề
     public function create()
     {
-        return view('topics.create');
+        // Kiểm tra xem có câu hỏi trong session không
+        if (!session('quiz_questions')) {
+            return redirect()->route('cauhoi.create')->with('error', 'Vui lòng tạo câu hỏi trước!');
+        }
+        
+        return view('chude');
     }
 
     // Lưu chủ đề
@@ -34,8 +39,26 @@ class TopicController extends Controller
 
         $topic = Topic::create($data);
 
-        return redirect()->route('topics.show', $topic)
-            ->with('ok', 'Đã tạo chủ đề');
+        // Lấy câu hỏi từ session và lưu vào database
+        $questions = session('quiz_questions', []);
+        foreach ($questions as $questionData) {
+            $question = $topic->questions()->create([
+                'content' => $questionData['content']
+            ]);
+
+            foreach ($questionData['choices'] as $choiceData) {
+                $question->choices()->create([
+                    'content' => $choiceData['content'],
+                    'is_correct' => $choiceData['is_correct']
+                ]);
+            }
+        }
+
+        // Xóa session sau khi lưu
+        session()->forget('quiz_questions');
+
+        return redirect()->route('trangchinh')
+            ->with('ok', 'Đã tạo chủ đề và câu hỏi thành công!');
     }
 
     // Xem 1 chủ đề + câu hỏi bên trong
