@@ -51,3 +51,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/thongke', [ThongKeController::class, 'index'])
         ->name('thongke.index');
 });
+
+// Route để refresh CSRF token
+Route::get('/refresh-csrf', function () {
+    return response()->json(['token' => csrf_token()]);
+})->name('refresh.csrf');

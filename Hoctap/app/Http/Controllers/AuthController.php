@@ -14,24 +14,31 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $cred = $request->validate([
-            'usergmail' => ['required','string','max:50'],
-            'password'  => ['required','string'],
-            'remember'  => ['nullable','boolean'],
-        ]);
+        try {
+            $cred = $request->validate([
+                'usergmail' => ['required','string','max:50'],
+                'password'  => ['required','string'],
+                'remember'  => ['nullable','boolean'],
+            ]);
 
-        $remember = (bool)($cred['remember'] ?? false);
-        unset($cred['remember']);
+            $remember = (bool)($cred['remember'] ?? false);
+            unset($cred['remember']);
 
-        if (Auth::attempt(['usergmail' => $cred['usergmail'], 'password' => $cred['password']], $remember)) {
-            $request->session()->regenerate();
-            return redirect()->intended(route('trangchinh'))
-                   ->with('ok','Đăng nhập thành công');
+            if (Auth::attempt(['usergmail' => $cred['usergmail'], 'password' => $cred['password']], $remember)) {
+                $request->session()->regenerate();
+                return redirect()->intended(route('trangchinh'))
+                       ->with('ok','Đăng nhập thành công');
+            }
+
+            return back()->withErrors([
+                'usergmail' => 'Tài khoản hoặc mật khẩu không đúng.',
+            ])->onlyInput('usergmail');
+            
+        } catch (\Illuminate\Session\TokenMismatchException $e) {
+            return back()->withErrors([
+                'usergmail' => 'Phiên đăng nhập đã hết hạn. Vui lòng thử lại.',
+            ])->onlyInput('usergmail');
         }
-
-        return back()->withErrors([
-            'usergmail' => 'Tài khoản hoặc mật khẩu không đúng.',
-        ])->onlyInput('usergmail');
     }
 
     public function logout(Request $request)
