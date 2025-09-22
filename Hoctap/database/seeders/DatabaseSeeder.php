@@ -16,24 +16,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Tạo tài khoản mặc định có thể đăng nhập
-        $user = User::updateOrCreate(
-            ['usergmail' => 'admin@example.com'],
-            [
-                'username' => 'Admin User',
-                'password' => bcrypt('123456'), // Mật khẩu: 123456
-            ]
-        );
-
-        // Tạo thêm tài khoản test
-        $testUser = User::updateOrCreate(
-            ['usergmail' => 'user@test.com'],
-            [
-                'username' => 'Test User',
-                'password' => bcrypt('password'), // Mật khẩu: password
-            ]
-        );
-
         // Tạo 1 chủ đề cho admin
         $topic = Topic::updateOrCreate(
             [
@@ -72,9 +54,5 @@ class DatabaseSeeder extends Seeder
                 'finished_at'     => now(),
             ]
         );
-
-        $this->command->info('Đã tạo tài khoản mặc định:');
-        $this->command->info('Email: admin@example.com | Password: 123456');
-        $this->command->info('Email: user@test.com | Password: password');
     }
 }

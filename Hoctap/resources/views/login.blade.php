@@ -22,8 +22,8 @@
       @csrf
 
       <div class="form-group">
-        <label for="usergmail">Tài khoản Gmail</label>
-        <input type="text" id="usergmail" name="usergmail" value="{{ old('usergmail') }}" required autofocus maxlength="50">
+        <label for="usergmail">Tài khoản (Gmail hoặc Tên đăng nhập)</label>
+        <input type="text" id="usergmail" name="usergmail" value="{{ old('usergmail') }}" required autofocus maxlength="50" placeholder="Nhập email hoặc tên đăng nhập">
       </div>
 
       <div class="form-group">

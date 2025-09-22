@@ -22,9 +22,14 @@ class AuthController extends Controller
             ]);
 
             $remember = (bool)($cred['remember'] ?? false);
-            unset($cred['remember']);
+            $loginField = $cred['usergmail'];
+            $password = $cred['password'];
 
-            if (Auth::attempt(['usergmail' => $cred['usergmail'], 'password' => $cred['password']], $remember)) {
+            // Xác định xem người dùng nhập username hay email
+            $fieldType = filter_var($loginField, FILTER_VALIDATE_EMAIL) ? 'usergmail' : 'username';
+            
+            // Thử đăng nhập với field type tương ứng
+            if (Auth::attempt([$fieldType => $loginField, 'password' => $password], $remember)) {
                 $request->session()->regenerate();
                 return redirect()->intended(route('trangchinh'))
                        ->with('ok','Đăng nhập thành công');
