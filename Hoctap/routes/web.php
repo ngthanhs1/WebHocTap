@@ -23,8 +23,6 @@ Route::get('/logout', [RegisterController::class, 'showForm'])->name('logout');
 Route::post('/logout', [RegisterController::class, 'register'])->name('logout.post');
 Route::post('/signout',[AuthController::class, 'logout'])->name('signout');
 
-Route::get('/Thuvien','App\Http\Controllers\ThuvienController@displayThuvien');
-
 // Route cho trang chính
 Route::get('/trangchinh', [TrangChinhController::class, 'index'])->middleware('auth')->name('trangchinh');
 

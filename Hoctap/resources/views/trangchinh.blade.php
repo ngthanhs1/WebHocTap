@@ -27,13 +27,6 @@
                     <span>Thống kê</span>
                 </a>
             </nav>
-            
-            <div class="progress-section">
-                <div class="progress-header">
-                    <div class="progress-icon">⚡</div>
-                    <div class="progress-text">11/20 hoạt động được tạo ra</div>
-                </div>
-            </div>
         </aside>
         
         <main class="main-content">
