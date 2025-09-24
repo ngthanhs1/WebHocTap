@@ -17,7 +17,8 @@ class TrangChinhController extends Controller
         $user = Auth::user();
         
         // Lấy các chủ đề của user hiện tại với thông tin câu hỏi
-        $topics = Topic::where('user_id', $user->id)
+        // Sử dụng usergmail thay vì id vì đó là primary key
+        $topics = Topic::where('user_id', $user->usergmail)
             ->withCount('questions')
             ->latest()
             ->get();

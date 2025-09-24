@@ -37,19 +37,28 @@ Route::middleware('auth')->group(function () {
     Route::get('/chude/create', [TopicController::class, 'create'])->name('chude.create');
     Route::post('/chude', [TopicController::class, 'store'])->name('chude.store');
     
-    Route::resource('topics', TopicController::class)->only(['index','show']);
+    // CRUD routes cho Topics
+    Route::resource('topics', TopicController::class);
 
+    // CRUD routes cho Questions
+    Route::resource('questions', QuestionController::class)->except(['index']);
     Route::post('/topics/{topic}/questions', [QuestionController::class, 'store'])
         ->name('questions.store');
 
+    // CRUD routes cho Choices
     Route::post('/questions/{question}/choices', [ChoicesController::class, 'store'])
         ->name('choices.store');
+    Route::put('/choices/{choice}', [ChoicesController::class, 'update'])
+        ->name('choices.update');
+    Route::delete('/choices/{choice}', [ChoicesController::class, 'destroy'])
+        ->name('choices.destroy');
 
     Route::post('/thongke', [ThongKeController::class, 'store'])
         ->name('thongke.store');
 
     Route::get('/thongke', [ThongKeController::class, 'index'])
         ->name('thongke.index');
+
 });
 
 // Route để refresh CSRF token

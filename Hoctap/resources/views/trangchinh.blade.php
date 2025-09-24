@@ -100,7 +100,9 @@
                                 <input type="checkbox" class="activity-checkbox">
                                 <div class="activity-icon">📊</div>
                                 <div class="activity-content">
-                                    <div class="activity-title">{{ $topic->name }}</div>
+                                    <div class="activity-title">
+                                        <a href="{{ route('topics.show', $topic) }}" class="topic-link">{{ $topic->name }}</a>
+                                    </div>
                                     <div class="activity-meta">
                                         <span>🌟</span>
                                         <span>{{ $topic->questions_count }} Qs</span>
@@ -114,9 +116,18 @@
                                     <div class="activity-time">{{ $topic->created_at->diffForHumans() }}</div>
                                 </div>
                                 <div class="activity-actions">
-                                    <button class="action-btn primary">▶️ Chơi</button>
-                                    <button class="action-btn">✏️ Sửa</button>
-                                    <button class="action-btn">⋯</button>
+                                    <a href="{{ route('topics.show', $topic) }}" class="action-btn primary">👁️ Xem</a>
+                                    <a href="{{ route('topics.edit', $topic) }}" class="action-btn">✏️ Sửa</a>
+                                    <button class="action-btn danger" onclick="deleteTopic({{ $topic->id }})">🗑️ Xóa</button>
+                                    <div class="dropdown">
+                                        <button class="action-btn" onclick="toggleDropdown({{ $topic->id }})">⋯</button>
+                                        <div class="dropdown-content" id="dropdown-{{ $topic->id }}">
+                                            <a href="{{ route('topics.show', $topic) }}">Chi tiết chủ đề</a>
+                                            <a href="{{ route('questions.create') }}?topic_id={{ $topic->id }}">Thêm câu hỏi</a>
+                                            <a href="{{ route('topics.edit', $topic) }}">Chỉnh sửa</a>
+                                            <button onclick="duplicateTopic({{ $topic->id }})">Nhân bản</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         @endforeach
@@ -129,106 +140,144 @@
                         </div>
                     @endif
                 </div>
+
+                <!-- Modal xác nhận xóa -->
+                <div class="modal" id="deleteModal">
+                    <div class="modal-content">
+                        <h3>Xác nhận xóa</h3>
+                        <p>Bạn có chắc chắn muốn xóa chủ đề này? Tất cả câu hỏi và đáp án sẽ bị xóa vĩnh viễn.</p>
+                        <div class="modal-actions">
+                            <button class="btn btn-secondary" onclick="closeDeleteModal()">Hủy</button>
+                            <form id="deleteForm" method="POST" style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Xóa</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
 
 <style>
-.user-menu {
-    position: relative;
+/* CRUD Styles */
+.topic-link {
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.topic-link:hover {
+    color: #667eea;
+}
+
+.action-btn {
+    padding: 6px 12px;
+    margin: 0 2px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+    font-size: 12px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
+    display: inline-block;
+}
+
+.action-btn.primary {
     background: #667eea;
     color: white;
-    border-radius: 50%;
-    font-weight: bold;
-    font-size: 14px;
+    border-color: #667eea;
 }
 
-.user-menu:hover {
-    background: #5a6fd8;
+.action-btn.danger {
+    background: #e74c3c;
+    color: white;
+    border-color: #e74c3c;
 }
 
-.user-dropdown {
+.action-btn:hover {
+    opacity: 0.8;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
     position: absolute;
-    top: 100%;
     right: 0;
     background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    min-width: 250px;
-    padding: 16px;
-    margin-top: 8px;
-    display: none;
-    z-index: 1000;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border-radius: 4px;
+    z-index: 1;
 }
 
-.user-dropdown.show {
+.dropdown-content.show {
     display: block;
 }
 
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 8px;
-}
-
-.user-avatar {
-    width: 32px;
-    height: 32px;
-    background: #667eea;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 12px;
-}
-
-.user-details {
-    flex: 1;
-}
-
-.user-name {
-    font-weight: bold;
-    font-size: 14px;
-    color: #333;
-}
-
-.user-email {
-    font-size: 12px;
-    color: #666;
-    margin-top: 2px;
-}
-
-.logout-btn {
-    width: 100%;
-    padding: 8px 12px;
-    background: none;
+.dropdown-content a, .dropdown-content button {
+    color: black;
+    padding: 8px 16px;
+    text-decoration: none;
+    display: block;
     border: none;
+    background: none;
+    width: 100%;
     text-align: left;
     cursor: pointer;
+}
+
+.dropdown-content a:hover, .dropdown-content button:hover {
+    background-color: #f1f1f1;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+}
+
+.modal-actions {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.btn {
+    padding: 8px 16px;
+    margin-left: 8px;
+    border: none;
     border-radius: 4px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    color: #333;
+    cursor: pointer;
 }
 
-.logout-btn:hover {
-    background: #f5f5f5;
+.btn-secondary {
+    background: #6c757d;
+    color: white;
 }
 
-.logout-btn span {
-    font-size: 16px;
+.btn-danger {
+    background: #e74c3c;
+    color: white;
 }
 </style>
 
@@ -247,6 +296,48 @@ document.addEventListener('click', function(event) {
         dropdown.classList.remove('show');
     }
 });
+
+// CRUD Functions
+function toggleDropdown(topicId) {
+    const dropdown = document.getElementById('dropdown-' + topicId);
+    dropdown.classList.toggle('show');
+}
+
+function deleteTopic(topicId) {
+    const modal = document.getElementById('deleteModal');
+    const form = document.getElementById('deleteForm');
+    form.action = '/topics/' + topicId;
+    modal.style.display = 'block';
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+}
+
+function duplicateTopic(topicId) {
+    if (confirm('Bạn có muốn nhân bản chủ đề này không?')) {
+        // TODO: Implement duplicate functionality
+        alert('Tính năng nhân bản sẽ được phát triển sau!');
+    }
+}
+
+// Đóng dropdown khi click bên ngoài
+document.addEventListener('click', function(event) {
+    const dropdowns = document.querySelectorAll('.dropdown-content');
+    dropdowns.forEach(dropdown => {
+        if (!dropdown.parentElement.contains(event.target)) {
+            dropdown.classList.remove('show');
+        }
+    });
+});
+
+// Đóng modal khi click bên ngoài
+window.onclick = function(event) {
+    const modal = document.getElementById('deleteModal');
+    if (event.target == modal) {
+        closeDeleteModal();
+    }
+}
 </script>
 </body>
 </html> 

@@ -7,6 +7,8 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
+            background-image: url('../img/phongnen.jpg');
+            background-size: cover;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -14,7 +16,7 @@
         }
 
         .login-container {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(243, 240, 240, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -111,7 +113,7 @@
 
         .login-btn {
             width: 100%;
-            background: linear-gradient(135deg, #8894ca 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #e9b9e2 0%, #dacfe6 100%);
             color: white;
             border: none;
             padding: 15px;

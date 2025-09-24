@@ -70,4 +70,44 @@ class TopicController extends Controller
 
         return view('topics.show', compact('topic'));
     }
+
+    // Form sửa chủ đề
+    public function edit(Topic $topic)
+    {
+        abort_unless($topic->user_id === auth()->id(), 403);
+        
+        return view('topics.edit', compact('topic'));
+    }
+
+    // Cập nhật chủ đề
+    public function update(Request $request, Topic $topic)
+    {
+        abort_unless($topic->user_id === auth()->id(), 403);
+
+        $data = $request->validate([
+            'name' => ['required','string','max:255'],
+            'slug' => ['nullable','string','max:255'],
+        ]);
+
+        $topic->update($data);
+
+        return redirect()->route('trangchinh')
+            ->with('ok', 'Đã cập nhật chủ đề thành công!');
+    }
+
+    // Xóa chủ đề
+    public function destroy(Topic $topic)
+    {
+        abort_unless($topic->user_id === auth()->id(), 403);
+
+        // Xóa tất cả questions và choices liên quan
+        foreach ($topic->questions as $question) {
+            $question->choices()->delete();
+        }
+        $topic->questions()->delete();
+        $topic->delete();
+
+        return redirect()->route('trangchinh')
+            ->with('ok', 'Đã xóa chủ đề thành công!');
+    }
 }

@@ -16,10 +16,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Tìm user admin đã có hoặc tạo mới
+        $user = User::firstOrCreate(
+            ['usergmail' => 'hihi@gmail.com'],
+            [
+                'username' => 'hihi',
+                'password' => bcrypt('123456')
+            ]
+        );
+
         // Tạo 1 chủ đề cho admin
         $topic = Topic::updateOrCreate(
             [
-                'user_id' => $user->usergmail, // Sử dụng usergmail làm foreign key
+                'user_id' => $user->usergmail,
                 'name'    => 'Toán cơ bản',
             ],
             [
