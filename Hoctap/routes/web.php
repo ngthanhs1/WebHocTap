@@ -34,6 +34,8 @@ Route::middleware('auth')->group(function () {
     // Route cho chủ đề
     Route::get('/chude/create', [TopicController::class, 'create'])->name('chude.create');
     Route::post('/chude', [TopicController::class, 'store'])->name('chude.store');
+    Route::get('/topics/select', [TopicController::class, 'selectForQuestions'])->name('topics.select');
+    Route::post('/topics/{topic}/add-questions', [TopicController::class, 'addQuestions'])->name('topics.add-questions');
     
     // CRUD routes cho Topics
     Route::resource('topics', TopicController::class);

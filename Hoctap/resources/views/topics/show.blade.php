@@ -4,67 +4,152 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $topic->name }} - Chi tiết chủ đề</title>
-    <link rel="stylesheet" href="{{ asset('css/styles2.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/styles4.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-    <div class="container">
-        <div class="header-section">
-            <div class="breadcrumb">
-                <a href="{{ route('trangchinh') }}">← Quay lại trang chính</a>
+<body class="modern-body">
+    <div class="modern-container">
+        <!-- Header Section -->
+        <div class="modern-header">
+            <div class="breadcrumb-modern">
+                <a href="{{ route('trangchinh') }}" class="breadcrumb-link">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Quay lại trang chính</span>
+                </a>
             </div>
-            <div class="topic-header">
-                <h1>{{ $topic->name }}</h1>
-                <div class="topic-meta">
-                    <span>📊 {{ $topic->questions->count() }} câu hỏi</span>
-                    <span>•</span>
-                    <span>{{ $topic->created_at->format('d/m/Y') }}</span>
+            <div class="topic-hero">
+                <div class="topic-hero-content">
+                    <div class="topic-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="topic-info">
+                        <h1 class="topic-title">{{ $topic->name }}</h1>
+                        <div class="topic-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-question-circle"></i>
+                                <span>{{ $topic->questions->count() }} câu hỏi</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>{{ $topic->created_at->format('d/m/Y') }}</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-user"></i>
+                                <span>{{ $topic->user->username ?? 'Admin' }}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="topic-actions">
-                    <a href="{{ route('topics.edit', $topic) }}" class="btn btn-primary">✏️ Sửa chủ đề</a>
-                    <a href="{{ route('questions.create') }}?topic_id={{ $topic->id }}" class="btn btn-success">+ Thêm câu hỏi</a>
-                    <button onclick="deleteTopic({{ $topic->id }})" class="btn btn-danger">🗑️ Xóa chủ đề</button>
+                
+                <div class="topic-actions-modern">
+                    <a href="{{ route('topics.edit', $topic) }}" class="btn-modern btn-primary">
+                        <i class="fas fa-edit"></i>
+                        <span>Sửa chủ đề</span>
+                    </a>
+                    <a href="{{ route('questions.create') }}?topic_id={{ $topic->id }}" class="btn-modern btn-success">
+                        <i class="fas fa-plus"></i>
+                        <span>Thêm câu hỏi</span>
+                    </a>
+                    <button onclick="deleteTopic({{ $topic->id }})" class="btn-modern btn-danger">
+                        <i class="fas fa-trash"></i>
+                        <span>Xóa chủ đề</span>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <div class="content-section">
+        <!-- Content Section -->
+        <div class="content-section-modern">
             @if (session('ok'))
-                <div class="alert alert-success">{{ session('ok') }}</div>
+                <div class="alert-modern alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    <span>{{ session('ok') }}</span>
+                </div>
             @endif
 
             @if ($topic->questions->count() > 0)
-                <div class="questions-list">
-                    @foreach($topic->questions as $index => $question)
-                        <div class="question-card">
-                            <div class="question-header">
-                                <h3>Câu {{ $index + 1 }}: {{ $question->content }}</h3>
-                                <div class="question-actions">
-                                    <a href="{{ route('questions.edit', $question) }}" class="btn-small btn-primary">✏️ Sửa</a>
-                                    <button onclick="deleteQuestion({{ $question->id }})" class="btn-small btn-danger">🗑️ Xóa</button>
-                                </div>
-                            </div>
-                            <div class="choices-list">
-                                @foreach($question->choices as $choice)
-                                    <div class="choice-item {{ $choice->is_correct ? 'correct' : '' }}">
-                                        <span class="choice-indicator">{{ $choice->is_correct ? '✓' : '○' }}</span>
-                                        <span class="choice-content">{{ $choice->content }}</span>
-                                        <div class="choice-actions">
-                                            <button onclick="editChoice({{ $choice->id }}, '{{ $choice->content }}', {{ $choice->is_correct ? 'true' : 'false' }})" class="btn-small">✏️</button>
-                                            <button onclick="deleteChoice({{ $choice->id }})" class="btn-small btn-danger">🗑️</button>
+                <div class="questions-container">
+                    <div class="section-header">
+                        <h2>Danh sách câu hỏi</h2>
+                        <div class="questions-count">{{ $topic->questions->count() }} câu hỏi</div>
+                    </div>
+                    
+                    <div class="questions-grid">
+                        @foreach($topic->questions as $index => $question)
+                            <div class="question-card-modern" data-question-id="{{ $question->id }}">
+                                <div class="question-header-modern">
+                                    <div class="question-number">
+                                        <span>{{ $index + 1 }}</span>
+                                    </div>
+                                    <div class="question-content">
+                                        <h3>{{ $question->content }}</h3>
+                                        <div class="question-meta">
+                                            <span><i class="fas fa-list"></i> {{ $question->choices->count() }} đáp án</span>
+                                            <span><i class="fas fa-clock"></i> {{ $question->created_at->diffForHumans() }}</span>
                                         </div>
                                     </div>
-                                @endforeach
-                                <button onclick="addChoice({{ $question->id }})" class="btn-small btn-success">+ Thêm đáp án</button>
+                                    <div class="question-actions-modern">
+                                        <button onclick="toggleQuestion({{ $question->id }})" class="btn-icon" title="Xem/Ẩn đáp án">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <a href="{{ route('questions.edit', $question) }}" class="btn-icon btn-edit" title="Sửa câu hỏi">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button onclick="deleteQuestion({{ $question->id }})" class="btn-icon btn-delete" title="Xóa câu hỏi">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="choices-container" id="choices-{{ $question->id }}">
+                                    <div class="choices-header">
+                                        <h4>Đáp án:</h4>
+                                        <button onclick="addChoice({{ $question->id }})" class="btn-add-choice">
+                                            <i class="fas fa-plus"></i>
+                                            <span>Thêm đáp án</span>
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="choices-list-modern">
+                                        @foreach($question->choices as $choiceIndex => $choice)
+                                            <div class="choice-item-modern {{ $choice->is_correct ? 'correct' : 'incorrect' }}">
+                                                <div class="choice-indicator-modern">
+                                                    @if($choice->is_correct)
+                                                        <i class="fas fa-check-circle"></i>
+                                                    @else
+                                                        <i class="fas fa-times-circle"></i>
+                                                    @endif
+                                                </div>
+                                                <div class="choice-letter">{{ chr(65 + $choiceIndex) }}</div>
+                                                <div class="choice-text">{{ $choice->content }}</div>
+                                                <div class="choice-actions-modern">
+                                                    <button onclick="editChoice({{ $choice->id }}, '{{ $choice->content }}', {{ $choice->is_correct ? 'true' : 'false' }})" class="btn-icon-small" title="Sửa đáp án">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button onclick="deleteChoice({{ $choice->id }})" class="btn-icon-small btn-delete" title="Xóa đáp án">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
             @else
-                <div class="empty-state">
-                    <div class="empty-icon">❓</div>
+                <div class="empty-state-modern">
+                    <div class="empty-illustration">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
                     <h3>Chưa có câu hỏi nào</h3>
-                    <p>Hãy thêm câu hỏi đầu tiên cho chủ đề này!</p>
-                    <a href="{{ route('questions.create') }}?topic_id={{ $topic->id }}" class="btn btn-primary">+ Thêm câu hỏi</a>
+                    <p>Hãy tạo câu hỏi đầu tiên để bắt đầu xây dựng bộ đề của bạn!</p>
+                    <a href="{{ route('questions.create') }}?topic_id={{ $topic->id }}" class="btn-modern btn-primary btn-large">
+                        <i class="fas fa-plus"></i>
+                        <span>Tạo câu hỏi đầu tiên</span>
+                    </a>
                 </div>
             @endif
         </div>
@@ -126,212 +211,79 @@
         </div>
     </div>
 
-<style>
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.header-section {
-    margin-bottom: 30px;
-}
-
-.breadcrumb a {
-    color: #667eea;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.topic-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-top: 10px;
-}
-
-.topic-meta {
-    color: #666;
-    font-size: 14px;
-}
-
-.topic-actions {
-    display: flex;
-    gap: 10px;
-}
-
-.btn {
-    padding: 8px 16px;
-    border-radius: 4px;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.btn-primary { background: #667eea; color: white; }
-.btn-success { background: #28a745; color: white; }
-.btn-danger { background: #dc3545; color: white; }
-.btn-secondary { background: #6c757d; color: white; }
-
-.btn-small {
-    padding: 4px 8px;
-    font-size: 12px;
-    border-radius: 3px;
-    border: none;
-    cursor: pointer;
-    margin: 0 2px;
-}
-
-.questions-list {
-    space-y: 20px;
-}
-
-.question-card {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-}
-
-.question-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    border-bottom: 1px solid #eee;
-}
-
-.question-header h3 {
-    margin: 0;
-    font-size: 16px;
-}
-
-.choices-list {
-    padding: 20px;
-}
-
-.choice-item {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    margin-bottom: 8px;
-    border-radius: 4px;
-    background: #f8f9fa;
-}
-
-.choice-item.correct {
-    background: #d4edda;
-    border-left: 4px solid #28a745;
-}
-
-.choice-indicator {
-    margin-right: 10px;
-    font-weight: bold;
-    color: #28a745;
-}
-
-.choice-content {
-    flex: 1;
-}
-
-.choice-actions {
-    display: flex;
-    gap: 5px;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    background: white;
-    border-radius: 8px;
-}
-
-.empty-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-}
-
-.alert {
-    padding: 12px 16px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-}
-
-.alert-success {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.4);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border-radius: 8px;
-    width: 500px;
-    max-width: 90%;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.form-group input[type="text"] {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.modal-actions {
-    margin-top: 20px;
-    text-align: right;
-}
-</style>
-
 <script>
+// Toggle question visibility
+function toggleQuestion(questionId) {
+    const choicesContainer = document.getElementById('choices-' + questionId);
+    const toggleBtn = event.target.closest('.btn-icon');
+    const icon = toggleBtn.querySelector('i');
+    
+    if (choicesContainer.style.display === 'none' || !choicesContainer.style.display) {
+        choicesContainer.style.display = 'block';
+        icon.className = 'fas fa-eye-slash';
+        toggleBtn.title = 'Ẩn đáp án';
+    } else {
+        choicesContainer.style.display = 'none';
+        icon.className = 'fas fa-eye';
+        toggleBtn.title = 'Xem đáp án';
+    }
+}
+
+// Delete topic with modern confirm
 function deleteTopic(topicId) {
-    const modal = document.getElementById('deleteTopicModal');
-    const form = document.getElementById('deleteTopicForm');
-    form.action = '/topics/' + topicId;
-    modal.style.display = 'block';
+    if (confirm('⚠️ Bạn có chắc chắn muốn xóa chủ đề này?\n\nTất cả câu hỏi và đáp án sẽ bị xóa vĩnh viễn và không thể khôi phục.')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/topics/' + topicId;
+        
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = '{{ csrf_token() }}';
+        
+        const methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        methodInput.value = 'DELETE';
+        
+        form.appendChild(csrfInput);
+        form.appendChild(methodInput);
+        document.body.appendChild(form);
+        form.submit();
+    }
 }
 
+// Delete question with modern confirm
 function deleteQuestion(questionId) {
-    const modal = document.getElementById('deleteQuestionModal');
-    const form = document.getElementById('deleteQuestionForm');
-    form.action = '/questions/' + questionId;
-    modal.style.display = 'block';
+    if (confirm('🗑️ Bạn có chắc chắn muốn xóa câu hỏi này?\n\nTất cả đáp án của câu hỏi này cũng sẽ bị xóa.')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/questions/' + questionId;
+        
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = '{{ csrf_token() }}';
+        
+        const methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        methodInput.value = 'DELETE';
+        
+        form.appendChild(csrfInput);
+        form.appendChild(methodInput);
+        document.body.appendChild(form);
+        form.submit();
+    }
 }
 
+// Add choice with modern modal
 function addChoice(questionId) {
     const modal = document.getElementById('choiceModal');
     const form = document.getElementById('choiceForm');
     const title = document.getElementById('choiceModalTitle');
     
-    title.textContent = 'Thêm đáp án';
+    title.textContent = '➕ Thêm đáp án mới';
     form.action = '/questions/' + questionId + '/choices';
     form.method = 'POST';
     
@@ -339,15 +291,27 @@ function addChoice(questionId) {
     document.getElementById('choiceContent').value = '';
     document.getElementById('choiceCorrect').checked = false;
     
+    // Remove method input if exists
+    const methodInput = form.querySelector('input[name="_method"]');
+    if (methodInput) {
+        methodInput.remove();
+    }
+    
     modal.style.display = 'block';
+    
+    // Focus on input
+    setTimeout(() => {
+        document.getElementById('choiceContent').focus();
+    }, 100);
 }
 
+// Edit choice with modern modal
 function editChoice(choiceId, content, isCorrect) {
     const modal = document.getElementById('choiceModal');
     const form = document.getElementById('choiceForm');
     const title = document.getElementById('choiceModalTitle');
     
-    title.textContent = 'Sửa đáp án';
+    title.textContent = '✏️ Sửa đáp án';
     form.action = '/choices/' + choiceId;
     
     // Add method spoofing for PUT
@@ -365,10 +329,18 @@ function editChoice(choiceId, content, isCorrect) {
     document.getElementById('choiceCorrect').checked = isCorrect;
     
     modal.style.display = 'block';
+    
+    // Focus and select text
+    setTimeout(() => {
+        const input = document.getElementById('choiceContent');
+        input.focus();
+        input.select();
+    }, 100);
 }
 
+// Delete choice with modern confirm
 function deleteChoice(choiceId) {
-    if (confirm('Bạn có chắc chắn muốn xóa đáp án này?')) {
+    if (confirm('🗑️ Bạn có chắc chắn muốn xóa đáp án này?')) {
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = '/choices/' + choiceId;
@@ -390,19 +362,67 @@ function deleteChoice(choiceId) {
     }
 }
 
+// Close modal
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
 }
 
-// Đóng modal khi click bên ngoài
-window.onclick = function(event) {
-    const modals = document.querySelectorAll('.modal');
-    modals.forEach(modal => {
-        if (event.target == modal) {
-            modal.style.display = 'none';
+// Enhanced modal interactions
+document.addEventListener('DOMContentLoaded', function() {
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (modal.style.display === 'block') {
+                    modal.style.display = 'none';
+                }
+            });
         }
     });
-}
+    
+    // Auto-hide alerts after 5 seconds
+    const alerts = document.querySelectorAll('.alert-modern');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            alert.style.opacity = '0';
+            setTimeout(() => {
+                alert.remove();
+            }, 300);
+        }, 5000);
+    });
+    
+    // Initialize choices visibility (collapsed by default)
+    const choicesContainers = document.querySelectorAll('.choices-container');
+    choicesContainers.forEach(container => {
+        container.style.display = 'none';
+    });
+});
+
+// Smooth scroll to question when added/edited
+function scrollToQuestion(questionId) {
+    const questionCard = document.querySelector(`[data-question-id="${questionId}"]`);
+    if (questionCard) {
+        questionCard.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+        });
+        questionCard.style.transform = 'scale(1.02)';
+        setTimeout(() => {
+            questionCard.style.transform = 'scale(1)';
+        }, 200);
+    }
+}</script>
 </script>
 </body>
 </html>

@@ -203,7 +203,7 @@
             gap: 12px;
         }
 
-        .help-btn {
+        .theme-toggle-btn {
             padding: 8px 16px;
             border: 1px solid #d1d5db;
             border-radius: 8px;
@@ -212,11 +212,166 @@
             font-size: 14px;
             cursor: pointer;
             transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .help-btn:hover {
+        .theme-toggle-btn:hover {
             border-color: #9ca3af;
             color: #374151;
+            background: #f9fafb;
+        }
+
+        .theme-icon {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Dark theme styles */
+        body.dark-theme {
+            background-color: #1a1a1a;
+            color: #e5e7eb;
+        }
+
+        body.dark-theme .sidebar {
+            background: #2d3748;
+            border-right: 1px solid #4a5568;
+        }
+
+        body.dark-theme .logo-text,
+        body.dark-theme .nav-item.active {
+            color: #e5e7eb;
+        }
+
+        body.dark-theme .nav-item {
+            color: #a0aec0;
+        }
+
+        body.dark-theme .nav-item:hover {
+            background: #4a5568;
+            color: #e5e7eb;
+        }
+
+        body.dark-theme .header {
+            background: #2d3748;
+            border-bottom: 1px solid #4a5568;
+        }
+
+        body.dark-theme .search-input {
+            background: #4a5568;
+            border-color: #718096;
+            color: #e5e7eb;
+        }
+
+        body.dark-theme .search-input:focus {
+            background: #4a5568;
+            border-color: #ff6b9d;
+        }
+
+        body.dark-theme .theme-toggle-btn {
+            background: #4a5568;
+            border-color: #718096;
+            color: #e5e7eb;
+        }
+
+        body.dark-theme .theme-toggle-btn:hover {
+            background: #2d3748;
+            border-color: #a0aec0;
+        }
+
+        body.dark-theme .page-title {
+            color: #e5e7eb;
+        }
+
+        body.dark-theme .tab {
+            color: #a0aec0;
+        }
+
+        body.dark-theme .tab.active {
+            color: #e5e7eb;
+        }
+
+        body.dark-theme .activity-list {
+            background: #2d3748;
+            border-color: #4a5568;
+        }
+
+        body.dark-theme .activity-item {
+            border-bottom-color: #4a5568;
+        }
+
+        body.dark-theme .activity-item:hover {
+            background: #4a5568;
+        }
+
+        body.dark-theme .activity-title {
+            color: #e5e7eb;
+        }
+
+        body.dark-theme .topic-link {
+            color: #e5e7eb;
+        }
+
+        body.dark-theme .topic-link:hover {
+            color: #ff6b9d;
+        }
+
+        body.dark-theme .activity-icon {
+            background: #4a5568;
+            color: #a0aec0;
+        }
+
+        body.dark-theme .action-btn {
+            background: #4a5568;
+            border-color: #718096;
+            color: #a0aec0;
+        }
+
+        body.dark-theme .action-btn:hover {
+            background: #2d3748;
+            color: #e5e7eb;
+        }
+
+        body.dark-theme .sort-dropdown {
+            background: #4a5568;
+            border-color: #718096;
+            color: #e5e7eb;
+        }
+
+        body.dark-theme .user-dropdown {
+            background: #2d3748;
+            border-color: #4a5568;
+        }
+
+        body.dark-theme .user-name {
+            color: #e5e7eb;
+        }
+
+        body.dark-theme .user-email {
+            color: #a0aec0;
+        }
+
+        body.dark-theme .logout-btn {
+            color: #e5e7eb;
+        }
+
+        body.dark-theme .logout-btn:hover {
+            background: #4a5568;
+        }
+
+        /* Dark theme cho search */
+        body.dark-theme .no-results {
+            color: #a0aec0;
+        }
+
+        body.dark-theme .no-results h3 {
+            color: #e5e7eb;
+        }
+
+        body.dark-theme .search-highlight {
+            background: linear-gradient(135deg, #ff6b9d, #f06292);
+            color: white;
         }
 
         .user-menu {

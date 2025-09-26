@@ -33,11 +33,14 @@
             <header class="header">
                 <div class="search-bar">
                     <div class="search-icon">🔍</div>
-                    <input type="text" class="search-input" placeholder="Tìm kiếm theo tên hoạt động">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Tìm kiếm theo tên chủ đề..." onkeyup="searchTopics()">
                 </div>
                 
                 <div class="header-actions">
-                    <button class="help-btn">🙋 Nhận trợ giúp</button>
+                    <button class="theme-toggle-btn" onclick="toggleTheme()" title="Chuyển đổi nền">
+                        <span class="theme-icon">🌙</span>
+                        <span class="theme-text"></span>
+                    </button>
                     <div class="user-menu" onclick="toggleUserMenu()">
                         <span>{{ substr($user->usergmail ?? 'User', 0, 2) }}</span>
                         <div class="user-dropdown" id="userDropdown">
@@ -87,6 +90,13 @@
                 </div>
 
                 <div class="activities-list">
+                    <!-- Thông báo không tìm thấy kết quả -->
+                    <div class="no-results" id="noResults">
+                        <div style="font-size: 48px; margin-bottom: 16px;">🔍</div>
+                        <h3>Không tìm thấy chủ đề nào</h3>
+                        <p>Thử tìm kiếm với từ khóa khác</p>
+                    </div>
+                    
                     @if($topics->count() > 0)
                         @foreach($topics as $topic)
                             <div class="activity-item">
@@ -272,6 +282,30 @@
     background: #e74c3c;
     color: white;
 }
+
+/* Search styles */
+.activity-item.hidden {
+    display: none !important;
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    display: none;
+}
+
+.no-results.show {
+    display: block;
+}
+
+.search-highlight {
+    background: linear-gradient(135deg, #ff6b9d, #f06292);
+    color: white;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-weight: bold;
+}
 </style>
 
 <script>
@@ -279,6 +313,37 @@ function toggleUserMenu() {
     const dropdown = document.getElementById('userDropdown');
     dropdown.classList.toggle('show');
 }
+
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.querySelector('.theme-icon');
+    const themeText = document.querySelector('.theme-text');
+    
+    body.classList.toggle('dark-theme');
+    
+    if (body.classList.contains('dark-theme')) {
+        themeIcon.textContent = '☀️';
+        themeText.textContent = '';
+        localStorage.setItem('theme', 'dark');
+    } else {
+        themeIcon.textContent = '🌙';
+        themeText.textContent = '';
+        localStorage.setItem('theme', 'light');
+    }
+}
+
+// Khôi phục theme từ localStorage khi tải trang
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    const themeIcon = document.querySelector('.theme-icon');
+    const themeText = document.querySelector('.theme-text');
+    
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeIcon.textContent = '☀️';
+        themeText.textContent = '';
+    }
+});
 
 // Đóng dropdown khi click bên ngoài
 document.addEventListener('click', function(event) {
@@ -331,6 +396,92 @@ window.onclick = function(event) {
         closeDeleteModal();
     }
 }
+
+// Chức năng tìm kiếm chủ đề
+function searchTopics() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    const activityItems = document.querySelectorAll('.activity-item');
+    const noResults = document.getElementById('noResults');
+    const tabCount = document.querySelector('.tab.active');
+    
+    let visibleCount = 0;
+    let totalItems = activityItems.length;
+    
+    // Nếu không có từ khóa tìm kiếm, hiển thị tất cả
+    if (searchTerm === '') {
+        activityItems.forEach(item => {
+            item.classList.remove('hidden');
+            // Xóa highlight
+            const titleLink = item.querySelector('.topic-link');
+            if (titleLink && titleLink.innerHTML.includes('<span class="search-highlight">')) {
+                titleLink.innerHTML = titleLink.textContent;
+            }
+        });
+        noResults.classList.remove('show');
+        visibleCount = totalItems;
+    } else {
+        // Tìm kiếm và filter
+        activityItems.forEach(item => {
+            const titleLink = item.querySelector('.topic-link');
+            const originalTitle = titleLink.textContent.toLowerCase();
+            
+            if (originalTitle.includes(searchTerm)) {
+                item.classList.remove('hidden');
+                
+                // Highlight từ khóa tìm kiếm
+                const regex = new RegExp(`(${escapeRegExp(searchTerm)})`, 'gi');
+                const highlightedTitle = titleLink.textContent.replace(regex, '<span class="search-highlight">$1</span>');
+                titleLink.innerHTML = highlightedTitle;
+                
+                visibleCount++;
+            } else {
+                item.classList.add('hidden');
+                // Xóa highlight nếu không match
+                titleLink.innerHTML = titleLink.textContent;
+            }
+        });
+        
+        // Hiển thị thông báo không tìm thấy nếu cần
+        if (visibleCount === 0) {
+            noResults.classList.add('show');
+        } else {
+            noResults.classList.remove('show');
+        }
+    }
+    
+    // Cập nhật số lượng trong tab
+    if (tabCount) {
+        const originalText = tabCount.textContent;
+        const baseText = originalText.split('(')[0];
+        tabCount.textContent = `${baseText}(${visibleCount})`;
+    }
+}
+
+// Escape special regex characters
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// Reset tìm kiếm khi focus vào search input
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('focus', function() {
+            if (this.value === '') {
+                searchTopics(); // Reset hiển thị
+            }
+        });
+        
+        // Xóa tìm kiếm khi nhấn Escape
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                this.value = '';
+                searchTopics();
+                this.blur();
+            }
+        });
+    }
+});
 </script>
 </body>
 </html> 

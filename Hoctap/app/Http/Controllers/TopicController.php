@@ -27,7 +27,7 @@ class TopicController extends Controller
         return view('chude');
     }
 
-    // Lưu chủ đề
+    // Lưu chủ đề (lấy từ session)
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -35,9 +35,17 @@ class TopicController extends Controller
             'slug' => ['nullable','string','max:255'],
         ]);
 
-        $data['user_id'] = auth()->id();
+        // Tạo slug nếu chưa có
+        if (empty($data['slug'])) {
+            $data['slug'] = \Str::slug($data['name']);
+        }
 
-        $topic = Topic::create($data);
+        // Tạo chủ đề
+        $topic = Topic::create([
+            'name' => $data['name'],
+            'slug' => $data['slug'],
+            'user_id' => auth()->user()->usergmail,
+        ]);
 
         // Lấy câu hỏi từ session và lưu vào database
         $questions = session('quiz_questions', []);
@@ -58,13 +66,50 @@ class TopicController extends Controller
         session()->forget('quiz_questions');
 
         return redirect()->route('trangchinh')
-            ->with('ok', 'Đã tạo chủ đề và câu hỏi thành công!');
+            ->with('success', 'Đã tạo chủ đề và câu hỏi thành công!');
+    }
+
+    // Hiển thị danh sách chủ đề để chọn thêm câu hỏi
+    public function selectForQuestions()
+    {
+        $topics = Topic::where('user_id', auth()->user()->usergmail)
+                      ->withCount('questions')
+                      ->orderBy('created_at', 'desc')
+                      ->get();
+        
+        return view('topics.select', compact('topics'));
+    }
+
+    // Thêm câu hỏi vào chủ đề đã có
+    public function addQuestions(Topic $topic)
+    {
+        // Lấy câu hỏi từ session và lưu vào chủ đề hiện tại
+        $questions = session('quiz_questions', []);
+        
+        foreach ($questions as $questionData) {
+            $question = $topic->questions()->create([
+                'content' => $questionData['content']
+            ]);
+
+            foreach ($questionData['choices'] as $choiceData) {
+                $question->choices()->create([
+                    'content' => $choiceData['content'],
+                    'is_correct' => $choiceData['is_correct']
+                ]);
+            }
+        }
+
+        // Xóa session sau khi lưu
+        session()->forget('quiz_questions');
+
+        return redirect()->route('trangchinh')
+            ->with('success', 'Đã thêm câu hỏi vào chủ đề thành công!');
     }
 
     // Xem 1 chủ đề + câu hỏi bên trong
     public function show(Topic $topic)
     {
-        abort_unless($topic->user_id === auth()->id(), 403);
+        abort_unless($topic->user_id === auth()->user()->usergmail, 403);
 
         $topic->load('questions.choices');
 
@@ -74,7 +119,7 @@ class TopicController extends Controller
     // Form sửa chủ đề
     public function edit(Topic $topic)
     {
-        abort_unless($topic->user_id === auth()->id(), 403);
+        abort_unless($topic->user_id === auth()->user()->usergmail, 403);
         
         return view('topics.edit', compact('topic'));
     }
@@ -82,7 +127,7 @@ class TopicController extends Controller
     // Cập nhật chủ đề
     public function update(Request $request, Topic $topic)
     {
-        abort_unless($topic->user_id === auth()->id(), 403);
+        abort_unless($topic->user_id === auth()->user()->usergmail, 403);
 
         $data = $request->validate([
             'name' => ['required','string','max:255'],
@@ -98,7 +143,7 @@ class TopicController extends Controller
     // Xóa chủ đề
     public function destroy(Topic $topic)
     {
-        abort_unless($topic->user_id === auth()->id(), 403);
+        abort_unless($topic->user_id === auth()->user()->usergmail, 403);
 
         // Xóa tất cả questions và choices liên quan
         foreach ($topic->questions as $question) {
