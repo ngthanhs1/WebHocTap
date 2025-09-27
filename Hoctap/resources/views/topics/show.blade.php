@@ -4,99 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $topic->name }} - Chi tiết chủ đề</title>
-    <link rel="stylesheet" href="{{ asset('css/styles4.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/styles4.css') }}">
 </head>
-<body class="modern-body">
-    <div class="modern-container">
-        <!-- Header Section -->
-        <div class="modern-header">
-            <div class="breadcrumb-modern">
-                <a href="{{ route('trangchinh') }}" class="breadcrumb-link">
-                    <i class="fas fa-arrow-left"></i>
-                    <span>Quay lại trang chính</span>
-                </a>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <div class="header">
+                <div class="breadcrumb-modern">
+                    <a href="{{ route('trangchinh') }}" class="breadcrumb-link">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Quay lại trang chính</span>
+                    </a>
+                </div>
             </div>
-            <div class="topic-hero">
-                <div class="topic-hero-content">
-                    <div class="topic-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <div class="topic-info">
-                        <h1 class="topic-title">{{ $topic->name }}</h1>
-                        <div class="topic-stats">
-                            <div class="stat-item">
-                                <i class="fas fa-question-circle"></i>
-                                <span>{{ $topic->questions->count() }} câu hỏi</span>
-                            </div>
-                            <div class="stat-item">
-                                <i class="fas fa-calendar-alt"></i>
-                                <span>{{ $topic->created_at->format('d/m/Y') }}</span>
-                            </div>
-                            <div class="stat-item">
-                                <i class="fas fa-user"></i>
+
+            <div class="content-area">
+                <div class="quiz-header">
+                    <div class="quiz-title">
+                        <div class="quiz-icon">📋</div>
+                        <div class="title-text">
+                            <h1>{{ $topic->name }}</h1>
+                            <div class="title-meta">
+                                <span class="status-badge">Chủ đề</span>
                                 <span>{{ $topic->user->username ?? 'Admin' }}</span>
+                                <span>{{ $topic->created_at->format('d/m/Y') }}</span>
+                                <span>{{ $topic->questions->count() }} câu hỏi</span>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="topic-actions-modern">
-                    <a href="{{ route('topics.edit', $topic) }}" class="btn-modern btn-primary">
-                        <i class="fas fa-edit"></i>
-                        <span>Sửa chủ đề</span>
-                    </a>
-                    <a href="{{ route('questions.create') }}?topic_id={{ $topic->id }}" class="btn-modern btn-success">
-                        <i class="fas fa-plus"></i>
-                        <span>Thêm câu hỏi</span>
-                    </a>
-                    <button onclick="deleteTopic({{ $topic->id }})" class="btn-modern btn-danger">
-                        <i class="fas fa-trash"></i>
-                        <span>Xóa chủ đề</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Content Section -->
-        <div class="content-section-modern">
-            @if (session('ok') || session('success'))
-                <div class="alert-modern alert-success">
-                    <i class="fas fa-check-circle"></i>
-                    <span>{{ session('ok') ?? session('success') }}</span>
-                </div>
-            @endif
-            
-            @if (session('error'))
-                <div class="alert-modern alert-error">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span>{{ session('error') }}</span>
-                </div>
-            @endif
-
-            @if ($topic->questions->count() > 0)
-                <div class="questions-container">
-                    <div class="section-header">
-                        <h2>Danh sách câu hỏi</h2>
-                        <div class="questions-count">{{ $topic->questions->count() }} câu hỏi</div>
+                    <div class="action-buttons">
+                        <a href="{{ route('topics.edit', $topic) }}" class="btn">
+                            <i class="fas fa-edit"></i> Chỉnh sửa
+                        </a>
+                        <a href="{{ route('questions.create') }}?topic_id={{ $topic->id }}" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Thêm câu hỏi
+                        </a>
+                        <button onclick="deleteTopic({{ $topic->id }})" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Xóa chủ đề
+                        </button>
+                        <button class="btn-primary">Bắt đầu ngay</button>
                     </div>
+                </div>
+
+                <div class="quiz-content">
+                    @if (session('ok') || session('success'))
+                        <div class="alert-modern alert-success">
+                            <i class="fas fa-check-circle"></i>
+                            <span>{{ session('ok') ?? session('success') }}</span>
+                        </div>
+                    @endif
                     
-                    <div class="questions-grid">
+                    @if (session('error'))
+                        <div class="alert-modern alert-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>{{ session('error') }}</span>
+                        </div>
+                    @endif
+
+                    @if ($topic->questions->count() > 0)
+                        <div class="quiz-info">
+                            <div class="quiz-stats">
+                                <strong>Danh sách câu hỏi</strong><br>
+                                {{ $topic->questions->count() }} câu hỏi
+                            </div>
+                        </div>
+
                         @foreach($topic->questions as $index => $question)
-                            <div class="question-card-modern" data-question-id="{{ $question->id }}">
-                                <div class="question-header-modern">
-                                    <div class="question-number">
-                                        <span>{{ $index + 1 }}</span>
-                                    </div>
-                                    <div class="question-content">
-                                        <h3>{{ $question->content }}</h3>
-                                        <div class="question-meta">
-                                            <span><i class="fas fa-list"></i> {{ $question->choices->count() }} đáp án</span>
-                                            <span><i class="fas fa-clock"></i> {{ $question->created_at->diffForHumans() }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="question-actions-modern">
+                            <div class="question" data-question-id="{{ $question->id }}">
+                                <div class="question-header">
+                                    <div class="question-number">{{ $index + 1 }}. NHIỀU LỰA CHỌN</div>
+                                    <div class="question-title">{{ $question->content }}</div>
+                                    <div class="question-actions">
                                         <button onclick="toggleQuestion({{ $question->id }})" class="btn-icon" title="Xem/Ẩn đáp án">
                                             <i class="fas fa-eye"></i>
                                         </button>
@@ -118,19 +97,19 @@
                                         </button>
                                     </div>
                                     
-                                    <div class="choices-list-modern">
+                                    <div class="options">
                                         @foreach($question->choices as $choiceIndex => $choice)
-                                            <div class="choice-item-modern {{ $choice->is_correct ? 'correct' : 'incorrect' }}">
-                                                <div class="choice-indicator-modern">
+                                            <div class="option {{ $choice->is_correct ? 'correct' : 'incorrect' }}">
+                                                <div class="option-radio">
                                                     @if($choice->is_correct)
-                                                        <i class="fas fa-check-circle"></i>
+                                                        <i class="fas fa-check"></i>
                                                     @else
-                                                        <i class="fas fa-times-circle"></i>
+                                                        <i class="fas fa-times"></i>
                                                     @endif
                                                 </div>
                                                 <div class="choice-letter">{{ chr(65 + $choiceIndex) }}</div>
-                                                <div class="choice-text">{{ $choice->content }}</div>
-                                                <div class="choice-actions-modern">
+                                                <div class="option-text">{{ $choice->content }}</div>
+                                                <div class="choice-actions">
                                                     <button onclick="editChoice({{ $choice->id }}, '{{ $choice->content }}', {{ $choice->is_correct ? 'true' : 'false' }})" class="btn-icon-small" title="Sửa đáp án">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
@@ -144,21 +123,21 @@
                                 </div>
                             </div>
                         @endforeach
-                    </div>
+                    @else
+                        <div class="empty-state">
+                            <div class="empty-illustration">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            <h3>Chưa có câu hỏi nào</h3>
+                            <p>Hãy tạo câu hỏi đầu tiên để bắt đầu xây dựng bộ đề của bạn!</p>
+                            <a href="{{ route('questions.create') }}?topic_id={{ $topic->id }}" class="btn btn-primary">
+                                <i class="fas fa-plus"></i>
+                                <span>Tạo câu hỏi đầu tiên</span>
+                            </a>
+                        </div>
+                    @endif
                 </div>
-            @else
-                <div class="empty-state-modern">
-                    <div class="empty-illustration">
-                        <i class="fas fa-question-circle"></i>
-                    </div>
-                    <h3>Chưa có câu hỏi nào</h3>
-                    <p>Hãy tạo câu hỏi đầu tiên để bắt đầu xây dựng bộ đề của bạn!</p>
-                    <a href="{{ route('questions.create') }}?topic_id={{ $topic->id }}" class="btn-modern btn-primary btn-large">
-                        <i class="fas fa-plus"></i>
-                        <span>Tạo câu hỏi đầu tiên</span>
-                    </a>
-                </div>
-            @endif
+            </div>
         </div>
     </div>
 
@@ -429,7 +408,37 @@ function scrollToQuestion(questionId) {
             questionCard.style.transform = 'scale(1)';
         }, 200);
     }
-}</script>
+}
+
+// Enhanced interactions từ code mẫu
+document.addEventListener('DOMContentLoaded', function() {
+    // Button hover effects
+    document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+
+    // Question animations
+    const questions = document.querySelectorAll('.question');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    });
+
+    questions.forEach(question => {
+        observer.observe(question);
+    });
+});
 </script>
 </body>
 </html>

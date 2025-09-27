@@ -101,13 +101,11 @@
                         @foreach($topics as $topic)
                             <div class="activity-item">
                                 <input type="checkbox" class="activity-checkbox">
-                                <div class="activity-icon">📊</div>
                                 <div class="activity-content">
                                     <div class="activity-title">
                                         <a href="{{ route('topics.show', $topic) }}" class="topic-link">{{ $topic->name }}</a>
                                     </div>
                                     <div class="activity-meta">
-                                        <span>🌟</span>
                                         <span>{{ $topic->questions_count }} Qs</span>
                                         <span>•</span>
                                         <span>{{ $topic->slug }}</span>
