@@ -6,7 +6,8 @@
 
 .modern-body {
     font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-image: url("../img/xemchude.jpg");
+    background-size: cover;
     min-height: 100vh;
     color: #333;
 }
@@ -69,7 +70,7 @@
 .topic-icon {
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #a5accc, #8d9ff0);
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -176,7 +177,7 @@
 
 .questions-count {
     background: #e0e7ff;
-    color: #3730a3;
+    color: #7f9df0;
     padding: 6px 12px;
     border-radius: 20px;
     font-size: 14px;
@@ -214,7 +215,7 @@
 .question-number {
     width: 32px;
     height: 32px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #a5accc, #8d9ff0);
     color: white;
     border-radius: 8px;
     display: flex;
@@ -470,7 +471,7 @@
 
 .form-group input[type="text"]:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #93a5f5;
 }
 
 .modal-actions {

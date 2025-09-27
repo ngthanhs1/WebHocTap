@@ -61,10 +61,17 @@
 
         <!-- Content Section -->
         <div class="content-section-modern">
-            @if (session('ok'))
+            @if (session('ok') || session('success'))
                 <div class="alert-modern alert-success">
                     <i class="fas fa-check-circle"></i>
-                    <span>{{ session('ok') }}</span>
+                    <span>{{ session('ok') ?? session('success') }}</span>
+                </div>
+            @endif
+            
+            @if (session('error'))
+                <div class="alert-modern alert-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>{{ session('error') }}</span>
                 </div>
             @endif
 

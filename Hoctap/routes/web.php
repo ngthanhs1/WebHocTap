@@ -43,7 +43,7 @@ Route::middleware('auth')->group(function () {
     // CRUD routes cho Questions
     Route::resource('questions', QuestionController::class)->except(['index']);
     Route::post('/topics/{topic}/questions', [QuestionController::class, 'store'])
-        ->name('questions.store');
+        ->name('topics.questions.store');
 
     // CRUD routes cho Choices
     Route::post('/questions/{question}/choices', [ChoicesController::class, 'store'])

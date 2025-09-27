@@ -9,8 +9,17 @@ use Illuminate\Http\Request;
 class QuestionController extends Controller
 {
     // Hiển thị trang tạo câu hỏi
-    public function create()
+    public function create(Request $request)
     {
+        // Nếu có topic_id, hiển thị form thêm câu hỏi cho chủ đề đó
+        if ($request->has('topic_id')) {
+            $topic = Topic::where('id', $request->topic_id)
+                         ->where('user_id', auth()->user()->usergmail)
+                         ->firstOrFail();
+            return view('questions.create', compact('topic'));
+        }
+        
+        // Nếu không có topic_id, hiển thị trang tạo câu hỏi thông thường
         return view('cauhoi');
     }
 
@@ -26,36 +35,61 @@ class QuestionController extends Controller
     // Thêm 1 câu hỏi + nhiều đáp án vào topic
     public function store(Request $request, Topic $topic)
     {
-        abort_unless($topic->user_id === auth()->id(), 403);
+        abort_unless($topic->user_id === auth()->user()->usergmail, 403);
 
         $data = $request->validate([
-            'content' => ['required','string'],
-            'choices' => ['required','array','min:2'],
-            'choices.*.content'    => ['required','string'],
+            'content' => ['required','string','max:500'],
+            'choices' => ['required','array'],
+            'choices.*.content' => ['nullable','string','max:200'],
             'choices.*.is_correct' => ['required','boolean'],
+            'correct_choice' => ['required','integer','min:0','max:3']
         ]);
 
-        // phải có đúng 1 đáp án đúng
-        $correctCount = collect($data['choices'])->where('is_correct', true)->count();
-        if ($correctCount !== 1) {
-            return back()->withErrors(['choices' => 'Mỗi câu hỏi phải có đúng 1 đáp án đúng.'])
+        // Lọc các đáp án có nội dung
+        $validChoices = [];
+        foreach ($data['choices'] as $index => $choice) {
+            if (!empty(trim($choice['content'] ?? ''))) {
+                $validChoices[] = [
+                    'content' => trim($choice['content']),
+                    'is_correct' => ($index == $data['correct_choice'])
+                ];
+            }
+        }
+
+        // Kiểm tra tối thiểu 2 đáp án
+        if (count($validChoices) < 2) {
+            return back()->withErrors(['choices' => 'Cần ít nhất 2 đáp án có nội dung.'])
                          ->withInput();
         }
 
-        // tạo câu hỏi
-        $question = $topic->questions()->create([
-            'content' => $data['content'],
-        ]);
-
-        // tạo đáp án
-        foreach ($data['choices'] as $c) {
-            $question->choices()->create([
-                'content'    => $c['content'],
-                'is_correct' => (bool) $c['is_correct'],
-            ]);
+        // Kiểm tra đáp án đúng có nội dung
+        $correctChoiceContent = $data['choices'][$data['correct_choice']]['content'] ?? '';
+        if (empty(trim($correctChoiceContent))) {
+            return back()->withErrors(['correct_choice' => 'Đáp án được chọn làm đáp án đúng phải có nội dung.'])
+                         ->withInput();
         }
 
-        return back()->with('ok', 'Đã thêm câu hỏi & đáp án');
+        try {
+            // Tạo câu hỏi
+            $question = $topic->questions()->create([
+                'content' => $data['content'],
+            ]);
+
+            // Tạo đáp án
+            foreach ($validChoices as $choice) {
+                $question->choices()->create([
+                    'content' => $choice['content'],
+                    'is_correct' => $choice['is_correct'],
+                ]);
+            }
+
+            return redirect()->route('topics.show', $topic)
+                           ->with('success', 'Đã thêm câu hỏi thành công!');
+                           
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Có lỗi xảy ra khi lưu câu hỏi: ' . $e->getMessage()])
+                         ->withInput();
+        }
     }
 
     // Hiển thị 1 câu hỏi với các đáp án
