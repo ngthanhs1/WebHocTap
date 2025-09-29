@@ -41,32 +41,35 @@ class QuestionController extends Controller
             'content' => ['required','string','max:500'],
             'choices' => ['required','array'],
             'choices.*.content' => ['nullable','string','max:200'],
-            'choices.*.is_correct' => ['required','boolean'],
-            'correct_choice' => ['required','integer','min:0','max:3']
+            'choices.*.is_correct' => ['required','in:0,1']
         ]);
 
         // Lọc các đáp án có nội dung
         $validChoices = [];
         foreach ($data['choices'] as $index => $choice) {
-            if (!empty(trim($choice['content'] ?? ''))) {
+            if (!empty(trim($choice['content']))) {
                 $validChoices[] = [
                     'content' => trim($choice['content']),
-                    'is_correct' => ($index == $data['correct_choice'])
+                    'is_correct' => $choice['is_correct'] == '1'
                 ];
             }
         }
 
-        // Kiểm tra tối thiểu 2 đáp án
+        // Kiểm tra có ít nhất 2 đáp án
         if (count($validChoices) < 2) {
-            return back()->withErrors(['choices' => 'Cần ít nhất 2 đáp án có nội dung.'])
-                         ->withInput();
+            return back()->withErrors(['choices' => 'Cần ít nhất 2 đáp án có nội dung.'])->withInput();
         }
 
-        // Kiểm tra đáp án đúng có nội dung
-        $correctChoiceContent = $data['choices'][$data['correct_choice']]['content'] ?? '';
-        if (empty(trim($correctChoiceContent))) {
-            return back()->withErrors(['correct_choice' => 'Đáp án được chọn làm đáp án đúng phải có nội dung.'])
-                         ->withInput();
+        // Kiểm tra có đúng 1 đáp án đúng
+        $correctCount = 0;
+        foreach ($validChoices as $choice) {
+            if ($choice['is_correct']) {
+                $correctCount++;
+            }
+        }
+
+        if ($correctCount !== 1) {
+            return back()->withErrors(['choices' => 'Phải có đúng 1 đáp án đúng.'])->withInput();
         }
 
         try {
@@ -75,17 +78,17 @@ class QuestionController extends Controller
                 'content' => $data['content'],
             ]);
 
-            // Tạo đáp án
+            // Tạo các đáp án
             foreach ($validChoices as $choice) {
                 $question->choices()->create([
                     'content' => $choice['content'],
-                    'is_correct' => $choice['is_correct'],
+                    'is_correct' => $choice['is_correct']
                 ]);
             }
 
             return redirect()->route('topics.show', $topic)
-                           ->with('success', 'Đã thêm câu hỏi thành công!');
-                           
+                           ->with('success', 'Thêm câu hỏi thành công!');
+
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'Có lỗi xảy ra khi lưu câu hỏi: ' . $e->getMessage()])
                          ->withInput();

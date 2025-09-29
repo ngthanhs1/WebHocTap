@@ -23,7 +23,7 @@
                 
                 <!-- Câu hỏi -->
                 <div class="question-input">
-                    <h3 style="color: white; margin-bottom: 15px;">❓ Nội dung câu hỏi</h3>
+                    <h3 style="color: white; margin-bottom: 15px;">Nội dung câu hỏi</h3>
                     <input type="text" name="content" id="questionContent" placeholder="Nhập câu hỏi vào đây..." maxlength="500" required>
                     @error('content')
                         <div class="error-message">{{ $message }}</div>
@@ -32,55 +32,55 @@
 
                 <!-- Đáp án -->
                 <div class="answers-grid" style="margin-top: 20px;">
-                    <h3 style="color: white; margin-bottom: 15px; grid-column: 1 / -1;">✅ Các đáp án (tối thiểu 2 đáp án)</h3>
+                    <h3 style="color: white; margin-bottom: 15px; grid-column: 1 / -1;">Các đáp án (tối thiểu 2 đáp án)</h3>
                     
-                    <div class="answer-card">
+                    <div class="answer-card" onclick="selectCorrectAnswer(0)">
                         <label style="color: white; font-weight: bold; display: block; margin-bottom: 8px;">A.</label>
                         <input type="text" name="choices[0][content]" class="answer-input" placeholder="Đáp án A (bắt buộc)" maxlength="200" required>
-                        <input type="hidden" name="choices[0][is_correct]" value="0">
-                        <label class="correct-label" style="margin-top: 10px;">
-                            <input type="radio" name="correct_choice" value="0" required>
-                            Đáp án đúng
-                        </label>
+                        <input type="hidden" name="choices[0][is_correct]" class="correct-answer" value="0">
+                        <div class="correct-indicator">
+                            <i class="check-icon">✓</i>
+                            <span>Đáp án đúng</span>
+                        </div>
                         @error('choices.0.content')
                             <div class="error-message">{{ $message }}</div>
                         @enderror
                     </div>
                     
-                    <div class="answer-card">
+                    <div class="answer-card" onclick="selectCorrectAnswer(1)">
                         <label style="color: white; font-weight: bold; display: block; margin-bottom: 8px;">B.</label>
                         <input type="text" name="choices[1][content]" class="answer-input" placeholder="Đáp án B (bắt buộc)" maxlength="200" required>
-                        <input type="hidden" name="choices[1][is_correct]" value="0">
-                        <label class="correct-label" style="margin-top: 10px;">
-                            <input type="radio" name="correct_choice" value="1">
-                            Đáp án đúng
-                        </label>
+                        <input type="hidden" name="choices[1][is_correct]" class="correct-answer" value="0">
+                        <div class="correct-indicator">
+                            <i class="check-icon">✓</i>
+                            <span>Đáp án đúng</span>
+                        </div>
                         @error('choices.1.content')
                             <div class="error-message">{{ $message }}</div>
                         @enderror
                     </div>
                     
-                    <div class="answer-card">
+                    <div class="answer-card" onclick="selectCorrectAnswer(2)">
                         <label style="color: white; font-weight: bold; display: block; margin-bottom: 8px;">C.</label>
                         <input type="text" name="choices[2][content]" class="answer-input" placeholder="Đáp án C (tùy chọn)" maxlength="200">
-                        <input type="hidden" name="choices[2][is_correct]" value="0">
-                        <label class="correct-label" style="margin-top: 10px;">
-                            <input type="radio" name="correct_choice" value="2">
-                            Đáp án đúng
-                        </label>
+                        <input type="hidden" name="choices[2][is_correct]" class="correct-answer" value="0">
+                        <div class="correct-indicator">
+                            <i class="check-icon">✓</i>
+                            <span>Đáp án đúng</span>
+                        </div>
                         @error('choices.2.content')
                             <div class="error-message">{{ $message }}</div>
                         @enderror
                     </div>
                     
-                    <div class="answer-card">
+                    <div class="answer-card" onclick="selectCorrectAnswer(3)">
                         <label style="color: white; font-weight: bold; display: block; margin-bottom: 8px;">D.</label>
                         <input type="text" name="choices[3][content]" class="answer-input" placeholder="Đáp án D (tùy chọn)" maxlength="200">
-                        <input type="hidden" name="choices[3][is_correct]" value="0">
-                        <label class="correct-label" style="margin-top: 10px;">
-                            <input type="radio" name="correct_choice" value="3">
-                            Đáp án đúng
-                        </label>
+                        <input type="hidden" name="choices[3][is_correct]" class="correct-answer" value="0">
+                        <div class="correct-indicator">
+                            <i class="check-icon">✓</i>
+                            <span>Đáp án đúng</span>
+                        </div>
                         @error('choices.3.content')
                             <div class="error-message">{{ $message }}</div>
                         @enderror
@@ -90,7 +90,7 @@
                 <!-- Nút lưu -->
                 <div style="text-align: center; margin-top: 30px;">
                     <button type="submit" class="btn btn-primary" style="padding: 15px 30px; font-size: 18px;">
-                        💾 Lưu câu hỏi vào chủ đề
+                        Lưu câu hỏi
                     </button>
                 </div>
             </form>
@@ -148,26 +148,29 @@
 </style>
 
 <script>
-// Cập nhật is_correct khi chọn radio
-document.addEventListener('DOMContentLoaded', function() {
-    const radios = document.querySelectorAll('input[name="correct_choice"]');
-    const hiddenInputs = document.querySelectorAll('input[name*="[is_correct]"]');
+// Chọn đáp án đúng
+function selectCorrectAnswer(index) {
+    // Bỏ chọn tất cả các đáp án khác
+    document.querySelectorAll('.answer-card').forEach((card, i) => {
+        card.classList.remove('correct');
+        card.querySelector('.correct-answer').value = '0';
+    });
     
-    radios.forEach((radio, index) => {
-        radio.addEventListener('change', function() {
-            // Reset tất cả về 0
-            hiddenInputs.forEach(input => input.value = '0');
-            
-            // Set giá trị đúng cho đáp án được chọn
-            if (this.checked) {
-                hiddenInputs[parseInt(this.value)].value = '1';
-                
-                // Visual effect
-                document.querySelectorAll('.answer-card').forEach(card => {
-                    card.classList.remove('correct');
-                });
-                this.closest('.answer-card').classList.add('correct');
-            }
+    // Chọn đáp án hiện tại
+    const selectedCard = document.querySelectorAll('.answer-card')[index];
+    selectedCard.classList.add('correct');
+    selectedCard.querySelector('.correct-answer').value = '1';
+}
+
+// Ngăn click vào input trigger selectCorrectAnswer
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.answer-input').forEach(input => {
+        input.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+        
+        input.addEventListener('focus', function(e) {
+            e.stopPropagation();
         });
     });
 });
@@ -176,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
 document.getElementById('questionForm').addEventListener('submit', function(e) {
     const questionContent = document.getElementById('questionContent').value.trim();
     const choices = document.querySelectorAll('input[name*="[content]"]');
-    const correctChoice = document.querySelector('input[name="correct_choice"]:checked');
+    const correctAnswers = document.querySelectorAll('.correct-answer');
     
     if (!questionContent) {
         alert('Vui lòng nhập nội dung câu hỏi!');
@@ -184,8 +187,16 @@ document.getElementById('questionForm').addEventListener('submit', function(e) {
         return;
     }
     
-    if (!correctChoice) {
-        alert('Vui lòng chọn đáp án đúng!');
+    // Kiểm tra có đáp án đúng được chọn không
+    let hasCorrectAnswer = false;
+    correctAnswers.forEach(input => {
+        if (input.value === '1') {
+            hasCorrectAnswer = true;
+        }
+    });
+    
+    if (!hasCorrectAnswer) {
+        alert('Vui lòng chọn đáp án đúng bằng cách click vào card đáp án!');
         e.preventDefault();
         return;
     }
@@ -203,8 +214,14 @@ document.getElementById('questionForm').addEventListener('submit', function(e) {
     }
     
     // Kiểm tra đáp án đúng có nội dung không
-    const correctChoiceContent = choices[parseInt(correctChoice.value)];
-    if (!correctChoiceContent.value.trim()) {
+    let correctAnswerHasContent = false;
+    choices.forEach((choice, index) => {
+        if (correctAnswers[index].value === '1' && choice.value.trim()) {
+            correctAnswerHasContent = true;
+        }
+    });
+    
+    if (!correctAnswerHasContent) {
         alert('Đáp án được chọn làm đáp án đúng phải có nội dung!');
         e.preventDefault();
         return;

@@ -13,7 +13,7 @@
             <h1>Tạo câu hỏi</h1>
             <div class="controls">
                 <a href="{{ route('trangchinh') }}" class="btn">← Quay lại</a>
-                <button class="btn btn-primary" onclick="exportToTopic()">📤 Xuất ra chủ đề</button>
+                <button class="btn btn-primary" onclick="exportToTopic()">Xuất ra chủ đề</button>
             </div>
         </div>
 
@@ -21,48 +21,52 @@
         <div class="quiz-container">
             <!-- Câu hỏi -->
             <div class="question-input">
-                <h3 style="color: white; margin-bottom: 15px;">❓ Nội dung câu hỏi</h3>
+                <h3 style="color: white; margin-bottom: 15px;">Nội dung câu hỏi</h3>
                 <input type="text" id="questionText" placeholder="Nhập câu hỏi vào đây..." maxlength="500">
             </div>
 
             <!-- Đáp án -->
             <div class="answers-grid" style="margin-top: 20px;">
-                <h3 style="color: white; margin-bottom: 15px; grid-column: 1 / -1;">✅ Các đáp án (tối thiểu 2 đáp án)</h3>
+                <h3 style="color: white; margin-bottom: 15px; grid-column: 1 / -1;">Các đáp án (tối thiểu 2 đáp án)</h3>
                 
-                <div class="answer-card">
+                <div class="answer-card" onclick="selectCorrectAnswer(0)">
                     <label style="color: white; font-weight: bold; display: block; margin-bottom: 8px;">A.</label>
                     <input type="text" class="answer-input" placeholder="Đáp án A (bắt buộc)" maxlength="200">
-                    <label class="correct-label" style="margin-top: 10px;">
-                        <input type="radio" name="correctAnswer" value="0" required>
-                        Đáp án đúng
-                    </label>
+                    <input type="hidden" class="correct-answer" value="false">
+                    <div class="correct-indicator">
+                        <i class="check-icon">✓</i>
+                        <span>Đáp án đúng</span>
+                    </div>
                 </div>
                 
-                <div class="answer-card">
+                <div class="answer-card" onclick="selectCorrectAnswer(1)">
                     <label style="color: white; font-weight: bold; display: block; margin-bottom: 8px;">B.</label>
                     <input type="text" class="answer-input" placeholder="Đáp án B (bắt buộc)" maxlength="200">
-                    <label class="correct-label" style="margin-top: 10px;">
-                        <input type="radio" name="correctAnswer" value="1">
-                        Đáp án đúng
-                    </label>
+                    <input type="hidden" class="correct-answer" value="false">
+                    <div class="correct-indicator">
+                        <i class="check-icon">✓</i>
+                        <span>Đáp án đúng</span>
+                    </div>
                 </div>
                 
-                <div class="answer-card">
+                <div class="answer-card" onclick="selectCorrectAnswer(2)">
                     <label style="color: white; font-weight: bold; display: block; margin-bottom: 8px;">C.</label>
                     <input type="text" class="answer-input" placeholder="Đáp án C (tùy chọn)" maxlength="200">
-                    <label class="correct-label" style="margin-top: 10px;">
-                        <input type="radio" name="correctAnswer" value="2">
-                        Đáp án đúng
-                    </label>
+                    <input type="hidden" class="correct-answer" value="false">
+                    <div class="correct-indicator">
+                        <i class="check-icon">✓</i>
+                        <span>Đáp án đúng</span>
+                    </div>
                 </div>
                 
-                <div class="answer-card">
+                <div class="answer-card" onclick="selectCorrectAnswer(3)">
                     <label style="color: white; font-weight: bold; display: block; margin-bottom: 8px;">D.</label>
                     <input type="text" class="answer-input" placeholder="Đáp án D (tùy chọn)" maxlength="200">
-                    <label class="correct-label" style="margin-top: 10px;">
-                        <input type="radio" name="correctAnswer" value="3">
-                        Đáp án đúng
-                    </label>
+                    <input type="hidden" class="correct-answer" value="false">
+                    <div class="correct-indicator">
+                        <i class="check-icon">✓</i>
+                        <span>Đáp án đúng</span>
+                    </div>
                 </div>
             </div>
 
@@ -86,19 +90,54 @@
 <script>
 let savedQuestions = [];
 
+// Chọn đáp án đúng
+function selectCorrectAnswer(index) {
+    // Bỏ chọn tất cả các đáp án khác
+    document.querySelectorAll('.answer-card').forEach((card, i) => {
+        card.classList.remove('correct');
+        card.querySelector('.correct-answer').value = 'false';
+    });
+    
+    // Chọn đáp án hiện tại
+    const selectedCard = document.querySelectorAll('.answer-card')[index];
+    selectedCard.classList.add('correct');
+    selectedCard.querySelector('.correct-answer').value = 'true';
+}
+
+// Ngăn click vào input trigger selectCorrectAnswer
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.answer-input').forEach(input => {
+        input.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+        
+        input.addEventListener('focus', function(e) {
+            e.stopPropagation();
+        });
+    });
+});
+
 // Thêm câu hỏi vào danh sách
 function addQuestion() {
     const questionText = document.getElementById('questionText').value.trim();
     const answerInputs = document.querySelectorAll('.answer-input');
-    const correctAnswer = document.querySelector('input[name="correctAnswer"]:checked');
+    const correctAnswers = document.querySelectorAll('.correct-answer');
     
     if (!questionText) {
         alert('Vui lòng nhập nội dung câu hỏi!');
         return;
     }
     
-    if (!correctAnswer) {
-        alert('Vui lòng chọn đáp án đúng!');
+    // Kiểm tra có đáp án đúng được chọn không
+    let hasCorrectAnswer = false;
+    correctAnswers.forEach(input => {
+        if (input.value === 'true') {
+            hasCorrectAnswer = true;
+        }
+    });
+    
+    if (!hasCorrectAnswer) {
+        alert('Vui lòng chọn đáp án đúng bằng cách click vào card đáp án!');
         return;
     }
     
@@ -108,13 +147,26 @@ function addQuestion() {
         if (input.value.trim()) {
             choices.push({
                 content: input.value.trim(),
-                is_correct: index == correctAnswer.value
+                is_correct: correctAnswers[index].value === 'true'
             });
         }
     });
     
     if (choices.length < 2) {
         alert('Cần tối thiểu 2 đáp án có nội dung!');
+        return;
+    }
+    
+    // Kiểm tra đáp án được chọn có nội dung không
+    let correctAnswerHasContent = false;
+    choices.forEach(choice => {
+        if (choice.is_correct && choice.content.trim()) {
+            correctAnswerHasContent = true;
+        }
+    });
+    
+    if (!correctAnswerHasContent) {
+        alert('Đáp án được chọn làm đáp án đúng phải có nội dung!');
         return;
     }
     
@@ -165,7 +217,8 @@ function updateQuestionsList() {
 function clearForm() {
     document.getElementById('questionText').value = '';
     document.querySelectorAll('.answer-input').forEach(input => input.value = '');
-    document.querySelectorAll('input[name="correctAnswer"]').forEach(radio => radio.checked = false);
+    document.querySelectorAll('.correct-answer').forEach(input => input.value = 'false');
+    document.querySelectorAll('.answer-card').forEach(card => card.classList.remove('correct'));
 }
 
 // Xuất ra chủ đề (lưu vào session và chuyển trang)
