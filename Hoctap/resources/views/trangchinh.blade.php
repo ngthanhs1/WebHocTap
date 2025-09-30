@@ -116,17 +116,30 @@
                                 <div class="activity-stats">
                                     <div class="activity-time">{{ $topic->created_at->diffForHumans() }}</div>
                                 </div>
-                                <div class="activity-actions">
-                                    <a href="{{ route('topics.show', $topic) }}" class="action-btn primary">👁️ Xem</a>
-                                    <a href="{{ route('topics.edit', $topic) }}" class="action-btn">✏️ Sửa</a>
-                                    <button class="action-btn danger" onclick="deleteTopic({{ $topic->id }})">🗑️ Xóa</button>
+                                    <button class="action-btn study" onclick="startStudy({{ $topic->id }})">
+                                        <span>Ôn tập</span>
+                                    </button>
+                                    <button class="action-btn test" onclick="startTest({{ $topic->id }})">
+                                        <span>Làm bài</span>
+                                    </button>
                                     <div class="dropdown">
-                                        <button class="action-btn" onclick="toggleDropdown({{ $topic->id }})">⋯</button>
+                                        <button class="action-btn dropdown-btn" onclick="toggleDropdown(event, {{ $topic->id }})">
+                                            <i class="icon">⋯</i>
+                                        </button>
                                         <div class="dropdown-content" id="dropdown-{{ $topic->id }}">
-                                            <a href="{{ route('topics.show', $topic) }}">Chi tiết chủ đề</a>
-                                            <a href="{{ route('questions.create') }}?topic_id={{ $topic->id }}">Thêm câu hỏi</a>
-                                            <a href="{{ route('topics.edit', $topic) }}">Chỉnh sửa</a>
-                                            <button onclick="duplicateTopic({{ $topic->id }})">Nhân bản</button>
+                                            <a href="{{ route('topics.show', $topic) }}" class="dropdown-item">
+                                                <span>Chi tiết chủ đề</span>
+                                            </a>
+                                            <a href="{{ route('questions.create') }}?topic_id={{ $topic->id }}" class="dropdown-item">
+                                                <span>Thêm câu hỏi</span>
+                                            </a>
+                                            <a href="{{ route('topics.edit', $topic) }}" class="dropdown-item">
+                                                <span>Chỉnh sửa</span>
+                                            </a>
+                                            <hr class="dropdown-divider">
+                                            <button onclick="deleteTopic({{ $topic->id }})" class="dropdown-item danger">
+                                                <span>Xóa chủ đề</span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -174,32 +187,66 @@
 }
 
 .action-btn {
-    padding: 6px 12px;
-    margin: 0 2px;
+    padding: 8px 12px;
+    margin: 0 3px;
     border: 1px solid #ddd;
     background: white;
-    border-radius: 4px;
+    border-radius: 8px;
     text-decoration: none;
     color: #333;
     font-size: 12px;
     cursor: pointer;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.action-btn .icon {
+    font-size: 14px;
+}
+
+.action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 .action-btn.primary {
-    background: #667eea;
+    background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
     border-color: #667eea;
 }
 
-.action-btn.danger {
-    background: #e74c3c;
+.action-btn.secondary {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
     color: white;
-    border-color: #e74c3c;
+    border-color: #f093fb;
 }
 
-.action-btn:hover {
-    opacity: 0.8;
+.action-btn.study {
+    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+    color: white;
+    border-color: #4ecdc4;
+}
+
+.action-btn.test {
+    background: linear-gradient(135deg, #ffa726, #ff9800);
+    color: white;
+    border-color: #ffa726;
+}
+
+.action-btn.dropdown-btn {
+    background: #f8f9fa;
+    border-color: #e9ecef;
+    color: #6c757d;
+    min-width: 40px;
+    justify-content: center;
+}
+
+.action-btn.dropdown-btn:hover {
+    background: #e9ecef;
 }
 
 .dropdown {
@@ -211,31 +258,72 @@
     display: none;
     position: absolute;
     right: 0;
+    top: 100%;
     background: white;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    border-radius: 4px;
-    z-index: 1;
+    min-width: 200px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    border-radius: 12px;
+    z-index: 1000;
+    border: 1px solid #e9ecef;
+    overflow: hidden;
+    margin-top: 5px;
 }
 
 .dropdown-content.show {
     display: block;
+    animation: dropdownShow 0.2s ease-out;
 }
 
-.dropdown-content a, .dropdown-content button {
-    color: black;
-    padding: 8px 16px;
+@keyframes dropdownShow {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-item {
+    color: #333;
+    padding: 12px 16px;
     text-decoration: none;
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     border: none;
     background: none;
     width: 100%;
     text-align: left;
     cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
 }
 
-.dropdown-content a:hover, .dropdown-content button:hover {
-    background-color: #f1f1f1;
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown-item.danger {
+    color: #dc3545;
+}
+
+.dropdown-item.danger:hover {
+    background-color: #fff5f5;
+}
+
+.dropdown-item .icon {
+    font-size: 14px;
+    width: 16px;
+    text-align: center;
+}
+
+.dropdown-divider {
+    margin: 8px 0;
+    border: none;
+    border-top: 1px solid #e9ecef;
 }
 
 /* Modal styles */
@@ -354,8 +442,28 @@ document.addEventListener('click', function(event) {
 });
 
 // CRUD Functions
-function toggleDropdown(topicId) {
-    const dropdown = document.getElementById('dropdown-' + topicId);
+function startStudy(topicId) {
+    // Study mode - hiển thị câu hỏi và đáp án để ôn tập
+    window.location.href = `/topics/${topicId}/study`;
+}
+
+function startTest(topicId) {
+    // Test mode - bài kiểm tra không hiện đáp án
+    window.location.href = `/topics/${topicId}/test`;
+}
+
+function toggleDropdown(event, topicId) {
+    event.stopPropagation();
+    
+    // Đóng tất cả dropdown khác
+    document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+        if (dropdown.id !== `dropdown-${topicId}`) {
+            dropdown.classList.remove('show');
+        }
+    });
+    
+    // Toggle dropdown hiện tại
+    const dropdown = document.getElementById(`dropdown-${topicId}`);
     dropdown.classList.toggle('show');
 }
 
@@ -379,12 +487,11 @@ function duplicateTopic(topicId) {
 
 // Đóng dropdown khi click bên ngoài
 document.addEventListener('click', function(event) {
-    const dropdowns = document.querySelectorAll('.dropdown-content');
-    dropdowns.forEach(dropdown => {
-        if (!dropdown.parentElement.contains(event.target)) {
+    if (!event.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown-content').forEach(dropdown => {
             dropdown.classList.remove('show');
-        }
-    });
+        });
+    }
 });
 
 // Đóng modal khi click bên ngoài

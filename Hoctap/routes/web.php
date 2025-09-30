@@ -39,6 +39,11 @@ Route::middleware('auth')->group(function () {
     
     // CRUD routes cho Topics
     Route::resource('topics', TopicController::class);
+    
+    // Study và Test routes
+    Route::get('/topics/{topic}/study', [TopicController::class, 'study'])->name('topics.study');
+    Route::get('/topics/{topic}/test', [TopicController::class, 'test'])->name('topics.test');
+    Route::post('/topics/{topic}/test-submit', [TopicController::class, 'testSubmit'])->name('topics.test.submit');
 
     // CRUD routes cho Questions
     Route::resource('questions', QuestionController::class)->except(['index']);

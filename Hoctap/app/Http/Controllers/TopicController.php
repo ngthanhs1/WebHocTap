@@ -155,4 +155,59 @@ class TopicController extends Controller
         return redirect()->route('trangchinh')
             ->with('ok', 'Đã xóa chủ đề thành công!');
     }
+
+    // Study mode - hiển thị câu hỏi với đáp án để ôn tập
+    public function study(Topic $topic)
+    {
+        abort_unless($topic->user_id === auth()->user()->usergmail, 403);
+
+        $topic->load('questions.choices');
+
+        return view('topics.study', compact('topic'));
+    }
+
+    // Test mode - bài kiểm tra không hiện đáp án
+    public function test(Topic $topic)
+    {
+        abort_unless($topic->user_id === auth()->user()->usergmail, 403);
+
+        $topic->load('questions.choices');
+
+        return view('topics.test', compact('topic'));
+    }
+
+    // Xử lý kết quả test
+    public function testSubmit(Request $request, Topic $topic)
+    {
+        abort_unless($topic->user_id === auth()->user()->usergmail, 403);
+
+        $userAnswers = $request->input('answers', []);
+        $questions = $topic->questions()->with('choices')->get();
+        
+        $score = 0;
+        $total = $questions->count();
+        $results = [];
+
+        foreach ($questions as $question) {
+            $correctChoice = $question->choices->where('is_correct', true)->first();
+            $userChoiceId = $userAnswers[$question->id] ?? null;
+            
+            $isCorrect = $userChoiceId && $userChoiceId == $correctChoice->id;
+            
+            if ($isCorrect) {
+                $score++;
+            }
+
+            $results[] = [
+                'question' => $question,
+                'user_choice_id' => $userChoiceId,
+                'correct_choice_id' => $correctChoice->id,
+                'is_correct' => $isCorrect
+            ];
+        }
+
+        $percentage = $total > 0 ? round(($score / $total) * 100, 2) : 0;
+
+        return view('topics.test-result', compact('topic', 'results', 'score', 'total', 'percentage'));
+    }
 }

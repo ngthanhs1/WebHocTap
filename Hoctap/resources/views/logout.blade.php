@@ -59,7 +59,6 @@
                         required
                     >
                     <button type="button" class="password-toggle" onclick="togglePassword('password')">
-                        👁️
                     </button>
                 </div>
             </div>
@@ -76,7 +75,6 @@
                         required
                     >
                     <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
-                        👁️
                     </button>
                 </div>
             </div>
