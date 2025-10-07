@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Topic;
 use Illuminate\Http\Request;
 
 class TopicApiController extends Controller
@@ -21,7 +22,26 @@ class TopicApiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $data = $request->validate([
+            'name'   => ['required','string','max:255'],
+            'slug'   => ['sometimes','nullable','string','max:255'],
+            'user_id' => ['sometimes','nullable','string'],
+        ]);
+
+        $userId = auth()->check() ? (auth()->user()->usergmail ?? null) : ($data['user_id'] ?? null);
+        if (!$userId) {
+            return response()->json([
+                'error' => 'user_id required (or provide an authenticated user)'
+            ], 422);
+        }
+        $topic = Topic::create([
+            'user_id' => $userId,
+            'name'    => $data['name'],
+            'slug'    => $data['slug'] ?? null,
+        ]);
+
+        return response()->json($topic, 201);
     }
 
     /**
