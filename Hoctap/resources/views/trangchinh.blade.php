@@ -22,7 +22,7 @@
                     <div class="icon">⏱️</div>
                     <span>Trước đây đã sử dụng</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="{{ route('thongke.index') }}" class="nav-item">
                     <div class="icon">📊</div>
                     <span>Thống kê</span>
                 </a>
