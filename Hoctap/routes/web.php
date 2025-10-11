@@ -58,11 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/choices/{choice}', [ChoicesController::class, 'destroy'])
         ->name('choices.destroy');
 
-    Route::post('/thongke', [ThongKeController::class, 'store'])
-        ->name('thongke.store');
 
-    Route::get('/thongke', [ThongKeController::class, 'index'])
-        ->name('thongke.index');
 
 });
 

@@ -11,26 +11,17 @@ class Topic extends Model
 {
     use HasFactory;
 
-    // Cho phép gán các cột này khi create/update
     protected $fillable = ['user_id', 'name', 'slug'];
 
     // ─── Quan hệ ────────────────────────────────────────────────────────────────
     public function user()      { return $this->belongsTo(User::class, 'user_id', 'usergmail'); }
     public function questions() { return $this->hasMany(Question::class); }
     public function sessions()  { return $this->hasMany(PracticeSession::class); }
-
-    // ─── Scopes tiện dụng ──────────────────────────────────────────────────────
     /** Lọc theo chủ sở hữu */
     public function scopeOwnedBy($q, int $userId) {
         return $q->where('user_id', $userId);
     }
 
-    /**
-     * Trả về thống kê gọn cho bảng báo cáo:
-     *  - attempts_count  (số lần làm)
-     *  - accuracy_percent (% đúng, tổng score / tổng total_questions)
-     *  - topic_created_at (thời gian tạo chủ đề)
-     */
     public function scopeWithReportForUser($q, int $userId) {
         return $q
             ->select('topics.*')

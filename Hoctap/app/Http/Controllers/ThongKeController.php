@@ -53,11 +53,14 @@ class ThongKeController extends Controller
                 'topics.name',
                 'topics.created_at',
                 DB::raw('COUNT(tk.id) as so_lan_lam'),
+                DB::raw('COALESCE(SUM(tk.score),0) as tong_dung'),
+                DB::raw('COALESCE(SUM(tk.total_questions),0) as tong_cau'),
                 DB::raw('ROUND( (CASE WHEN COALESCE(SUM(tk.total_questions),0)=0 
                                        THEN 0 
                                        ELSE SUM(tk.score)/SUM(tk.total_questions)*100 END), 2 ) as tong_phan_tram_dung')
             ]);
 
-        return view('thongke.index', compact('rows'));
+        // Trả về đúng file view thongke.blade.php ở resources/views/thongke.blade.php
+        return view('thongke', compact('rows'));
     }
 }
