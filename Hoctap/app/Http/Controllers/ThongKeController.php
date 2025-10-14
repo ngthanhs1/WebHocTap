@@ -20,11 +20,14 @@ class ThongKeController extends Controller
             'finished_at'     => ['nullable','date'],
         ]);
 
-        $topic = Topic::findOrFail($data['topic_id']);
-        abort_unless($topic->user_id === auth()->id(), 403);
+    $topic = Topic::findOrFail($data['topic_id']);
+    $uid = auth()->user()->usergmail; // Khoá chính kiểu string
+    // Chấp nhận cả schema có cột user_id hoặc usergmail
+    $owner = $topic->user_id ?? $topic->usergmail ?? null;
+    abort_unless($owner === $uid, 403);
 
         ThongKe::create([
-            'user_id'         => auth()->id(),
+            'user_id'         => $uid,
             'topic_id'        => $topic->id,
             'score'           => $data['score'],
             'total_questions' => $data['total_questions'],
@@ -38,15 +41,16 @@ class ThongKeController extends Controller
     // Trang báo cáo: Tên chủ đề | ID | % đúng | Thời gian tạo | Số lần làm
     public function index()
     {
-        $userId = auth()->id();
+        $userId = auth()->user()->usergmail; // Khớp với cột user_id dạng string
 
-        $rows = Topic::query()
-            ->where('topics.user_id', $userId)
-            ->leftJoin('thongke as tk', function ($join) use ($userId) {
-                $join->on('tk.topic_id', '=', 'topics.id')
-                     ->where('tk.user_id', '=', $userId);
-            })
-            ->groupBy('topics.id','topics.name','topics.created_at')
+        // Tổng số chủ đề của user (KPI)
+        $totalTopics = Topic::where('user_id', $userId)->count();
+
+        // Gom số liệu từ bảng thongke của user, join topics để lấy tên/ngày tạo
+        $rows = DB::table('thongke as tk')
+            ->join('topics', 'topics.id', '=', 'tk.topic_id')
+            ->where('tk.user_id', $userId)
+            ->groupBy('topics.id', 'topics.name', 'topics.created_at')
             ->orderByDesc('topics.created_at')
             ->get([
                 'topics.id',
@@ -61,6 +65,6 @@ class ThongKeController extends Controller
             ]);
 
         // Trả về đúng file view thongke.blade.php ở resources/views/thongke.blade.php
-        return view('thongke', compact('rows'));
+        return view('thongke', compact('rows', 'totalTopics'));
     }
 }

@@ -116,6 +116,12 @@
                 <i class="fas fa-home"></i>
                 Về trang chính
             </a>
+            @if(session('stat_saved') !== null)
+                <a href="{{ route('thongke') }}" class="action-btn btn-primary" style="background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; border: none;">
+                    <i class="fas fa-chart-pie"></i>
+                    Xem thống kê
+                </a>
+            @endif
             <a href="{{ route('topics.study', $topic) }}" class="action-btn btn-study">
                 <i class="fas fa-book-open"></i>
                 Ôn tập lại

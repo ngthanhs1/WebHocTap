@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     @php
-        $totalAttempted = $rows->filter(fn($r) => (int)$r->so_lan_lam > 0)->count();
-        $avgAccuracy = $rows->count() ? round($rows->avg('tong_phan_tram_dung'), 2) : 0;
+    $totalAttempted = $rows->count();
+    $avgAccuracy = $rows->count() ? round($rows->avg('tong_phan_tram_dung'), 2) : 0;
         $tongDung = (int)($rows->sum('tong_dung'));
         $tongCau  = (int)($rows->sum('tong_cau'));
         $tongSai  = max($tongCau - $tongDung, 0);
@@ -32,7 +32,7 @@
             </div>
             <div class="kpi-item">
                 <div class="label">Tổng chủ đề của bạn</div>
-                <div class="value">{{ $rows->count() }}</div>
+                <div class="value">{{ $totalTopics ?? 0 }}</div>
             </div>
             <div class="kpi-item">
                 <div class="label">Tổng câu đúng</div>
@@ -60,9 +60,9 @@
 
     <div class="card" style="margin-top:20px;">
         <div class="card-header">
-            <div class="card-title"><i class="fas fa-list"></i> Bảng thống kê theo chủ đề</div>
+            <div class="card-title"><i class="fas fa-list"></i> Bảng thống kê theo chủ đề f</div>
         </div>
-        @if($rows->isEmpty())
+    @if($rows->isEmpty())
             <div class="empty">
                 <i class="fas fa-clipboard-list"></i>
                 <div>Chưa có dữ liệu thống kê. Hãy làm thử một bài kiểm tra/ôn tập để lưu kết quả.</div>

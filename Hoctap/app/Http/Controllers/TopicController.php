@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Topic;
+use App\Models\ThongKe;
 use Illuminate\Http\Request;
 
 class TopicController extends Controller
@@ -207,6 +208,23 @@ class TopicController extends Controller
         }
 
         $percentage = $total > 0 ? round(($score / $total) * 100, 2) : 0;
+
+        // Lưu kết quả vào bảng thongke để trang Thống kê cập nhật
+        try {
+            $rec = ThongKe::create([
+                'user_id'         => auth()->user()->usergmail,
+                'topic_id'        => $topic->id,
+                'score'           => $score,
+                'total_questions' => $total,
+                'started_at'      => now(),
+                'finished_at'     => now(),
+            ]);
+            \Log::info('ThongKe saved', ['id' => $rec->id, 'user' => $rec->user_id, 'topic' => $rec->topic_id]);
+            session()->flash('stat_saved', true);
+        } catch (\Throwable $e) {
+            \Log::warning('Save thongke failed: '.$e->getMessage());
+            session()->flash('stat_saved', false);
+        }
 
         return view('topics.test-result', compact('topic', 'results', 'score', 'total', 'percentage'));
     }

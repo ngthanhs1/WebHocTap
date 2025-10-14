@@ -26,6 +26,9 @@ Route::post('/signout',[AuthController::class, 'logout'])->name('signout');
 // Route cho trang chính
 Route::get('/trangchinh', [TrangChinhController::class, 'index'])->middleware('auth')->name('trangchinh');
 
+// Route cho trang Thống kê
+Route::get('/thongke', [ThongKeController::class, 'index'])->middleware('auth')->name('thongke');
+
 Route::middleware('auth')->group(function () {
     // Route cho trang tạo câu hỏi
     Route::get('/cauhoi', [QuestionController::class, 'create'])->name('cauhoi.create');
