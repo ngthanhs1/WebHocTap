@@ -34,6 +34,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/cauhoi', [QuestionController::class, 'create'])->name('cauhoi.create');
     Route::post('/cauhoi/save-session', [QuestionController::class, 'saveToSession'])->name('cauhoi.save-session');
     
+    // Route cho quản lý câu hỏi
+    Route::get('/questions/manage', [QuestionController::class, 'manage'])->name('questions.manage');
+    
     // Route cho chủ đề
     Route::get('/chude/create', [TopicController::class, 'create'])->name('chude.create');
     Route::post('/chude', [TopicController::class, 'store'])->name('chude.store');

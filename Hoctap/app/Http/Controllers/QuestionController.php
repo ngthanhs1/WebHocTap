@@ -98,7 +98,7 @@ class QuestionController extends Controller
     // Hiển thị 1 câu hỏi với các đáp án
     public function show(Question $question)
     {
-        abort_unless($question->topic->user_id === auth()->id(), 403);
+        abort_unless($question->topic->user_id === auth()->user()->usergmail, 403);
         
         $question->load('choices');
         return view('questions.show', compact('question'));
@@ -107,7 +107,7 @@ class QuestionController extends Controller
     // Form sửa câu hỏi
     public function edit(Question $question)
     {
-        abort_unless($question->topic->user_id === auth()->id(), 403);
+        abort_unless($question->topic->user_id === auth()->user()->usergmail, 403);
         
         $question->load('choices');
         return view('questions.edit', compact('question'));
@@ -116,48 +116,75 @@ class QuestionController extends Controller
     // Cập nhật câu hỏi
     public function update(Request $request, Question $question)
     {
-        abort_unless($question->topic->user_id === auth()->id(), 403);
+        abort_unless($question->topic->user_id === auth()->user()->usergmail, 403);
 
         $data = $request->validate([
-            'content' => ['required','string'],
-            'choices' => ['required','array','min:2'],
-            'choices.*.content'    => ['required','string'],
-            'choices.*.is_correct' => ['required','boolean'],
+            'content' => ['required','string','max:500'],
+            'choices' => ['required','array'],
+            'choices.*.content' => ['nullable','string','max:200'],
+            'choices.*.is_correct' => ['required','in:0,1']
         ]);
 
-        // phải có đúng 1 đáp án đúng
-        $correctCount = collect($data['choices'])->where('is_correct', true)->count();
+        // Lọc các đáp án có nội dung
+        $validChoices = [];
+        foreach ($data['choices'] as $index => $choice) {
+            if (!empty(trim($choice['content']))) {
+                $validChoices[] = [
+                    'content' => trim($choice['content']),
+                    'is_correct' => $choice['is_correct'] == '1'
+                ];
+            }
+        }
+
+        // Kiểm tra có ít nhất 2 đáp án
+        if (count($validChoices) < 2) {
+            return back()->withErrors(['choices' => 'Cần ít nhất 2 đáp án có nội dung.'])->withInput();
+        }
+
+        // Kiểm tra có đúng 1 đáp án đúng
+        $correctCount = 0;
+        foreach ($validChoices as $choice) {
+            if ($choice['is_correct']) {
+                $correctCount++;
+            }
+        }
+
         if ($correctCount !== 1) {
-            return back()->withErrors(['choices' => 'Mỗi câu hỏi phải có đúng 1 đáp án đúng.'])
+            return back()->withErrors(['choices' => 'Phải có đúng 1 đáp án đúng.'])->withInput();
+        }
+
+        try {
+            // Cập nhật câu hỏi
+            $question->update(['content' => $data['content']]);
+
+            // Xóa các đáp án cũ và tạo mới
+            $question->choices()->delete();
+            foreach ($validChoices as $choice) {
+                $question->choices()->create([
+                    'content' => $choice['content'],
+                    'is_correct' => $choice['is_correct']
+                ]);
+            }
+
+            return redirect()->route('topics.show', $question->topic)
+                ->with('success', 'Cập nhật câu hỏi thành công!');
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Có lỗi xảy ra khi cập nhật câu hỏi: ' . $e->getMessage()])
                          ->withInput();
         }
-
-        // Cập nhật câu hỏi
-        $question->update(['content' => $data['content']]);
-
-        // Xóa các đáp án cũ và tạo mới
-        $question->choices()->delete();
-        foreach ($data['choices'] as $c) {
-            $question->choices()->create([
-                'content'    => $c['content'],
-                'is_correct' => (bool) $c['is_correct'],
-            ]);
-        }
-
-        return redirect()->route('topics.show', $question->topic)
-            ->with('ok', 'Đã cập nhật câu hỏi thành công!');
     }
 
     // Xóa câu hỏi
     public function destroy(Question $question)
     {
-        abort_unless($question->topic->user_id === auth()->id(), 403);
+        abort_unless($question->topic->user_id === auth()->user()->usergmail, 403);
 
         $topic = $question->topic;
         $question->choices()->delete();
         $question->delete();
 
         return redirect()->route('topics.show', $topic)
-            ->with('ok', 'Đã xóa câu hỏi thành công!');
+            ->with('success', 'Xóa câu hỏi thành công!');
     }
 }

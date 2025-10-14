@@ -4,28 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kiểm tra - {{ $topic->name }}</title>
-    <link rel="stylesheet" href="{{ asset('css/styles2.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/styles7.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/styles4.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="test-container">
-        <div class="test-header">
-            <h1><i class="fas fa-clipboard-check"></i> Kiểm tra</h1>
-            <h2>{{ $topic->name }}</h2>
-            <div class="test-stats">
-                <div class="stat-item">
-                    <span class="stat-number">{{ $topic->questions->count() }}</span>
-                    <span>Câu hỏi</span>
+    <div class="main-content" style="max-width: 900px; margin: 32px auto;">
+        <div style="background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 32px; margin-bottom: 32px; text-align: center;">
+            <h1 style="font-size: 2rem; font-weight: 700; color: #000; margin-bottom: 8px;"><i class="fas fa-clipboard-check"></i> Kiểm tra</h1>
+            <h2 style="font-size: 1.3rem; color: #222; margin-bottom: 16px;">{{ $topic->name }}</h2>
+            <div style="display: flex; justify-content: center; gap: 32px; margin-bottom: 16px;">
+                <div style="text-align: center;">
+                    <span style="font-size: 1.5rem; font-weight: bold; color: #000;">{{ $topic->questions->count() }}</span>
+                    <div style="color: #666;">Câu hỏi</div>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-number"><i class="fas fa-stopwatch"></i></span>
-                    <span>Kiểm tra</span>
+                <div style="text-align: center;">
+                    <span style="font-size: 1.5rem; color: #000;"><i class="fas fa-stopwatch"></i></span>
+                    <div style="color: #666;">Kiểm tra</div>
                 </div>
             </div>
             @if($topic->questions->count() > 0)
-            <div class="timer-container">
-                <div class="timer" id="timer">Thời gian: <span id="time">00:00</span></div>
+            <div style="margin-top: 12px;">
+                <span id="timer" style="font-size: 1.1rem; color: #000;">Thời gian: <span id="time">00:00</span></span>
             </div>
             @endif
         </div>
@@ -34,55 +33,44 @@
             <form id="testForm" action="{{ route('topics.test.submit', $topic) }}" method="POST">
                 @csrf
                 
-                <div class="question-status">
+                <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 16px;">
                     @for($i = 1; $i <= $topic->questions->count(); $i++)
-                        <div class="status-item" id="status-{{ $i }}">{{ $i }}</div>
+                        <div id="status-{{ $i }}" style="padding: 8px 15px; background: #f3f4f6; border-radius: 20px; color: #666; font-size: 0.9rem; min-width: 32px; text-align: center;"></div>
                     @endfor
                 </div>
-
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                <div style="background: #e5e7eb; height: 8px; border-radius: 4px; margin: 20px 0; overflow: hidden;">
+                    <div id="progressFill" style="background: #000; height: 100%; width: 0%; transition: width 0.3s ease;"></div>
                 </div>
 
                 @foreach($topic->questions as $index => $question)
-                    <div class="question-card">
-                        <div class="question-header">
-                            <div class="question-number">{{ $index + 1 }}</div>
-                            <div class="question-text">{{ $question->content }}</div>
+                    <div style="background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 24px; margin-bottom: 24px;">
+                        <div style="display: flex; align-items: center; margin-bottom: 16px;">
+                            <div style="background: #000; color: #fff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px;">{{ $index + 1 }}</div>
+                            <div style="font-size: 1.1rem; font-weight: 600; color: #222; flex: 1;">{{ $question->content }}</div>
                         </div>
-                        
-                        <div class="choices-container">
+                        <div style="margin-top: 12px;">
                             @foreach($question->choices as $choiceIndex => $choice)
-                                <div class="choice-item" onclick="selectChoice({{ $question->id }}, {{ $choice->id }}, this)">
-                                    <div class="choice-letter">{{ chr(65 + $choiceIndex) }}</div>
-                                    <div class="choice-text">{{ $choice->content }}</div>
-                                    <input type="radio" name="answers[{{ $question->id }}]" value="{{ $choice->id }}" class="choice-radio">
+                                <div onclick="selectChoice({{ $question->id }}, {{ $choice->id }}, this)" style="display: flex; align-items: center; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 2px solid #e5e7eb; background: #fff; cursor: pointer; transition: all 0.3s;" class="choice-item">
+                                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #e0e0e0; color: #000; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px;">{{ chr(65 + $choiceIndex) }}</div>
+                                    <div style="flex: 1; font-size: 1rem;">{{ $choice->content }}</div>
+                                    <input type="radio" name="answers[{{ $question->id }}]" value="{{ $choice->id }}" class="choice-radio" style="display: none;">
                                 </div>
                             @endforeach
                         </div>
                     </div>
                 @endforeach
 
-                <div class="test-actions">
-                    <a href="{{ route('trangchinh') }}" class="back-btn">
-                        <i class="fas fa-arrow-left"></i>
-                        Quay về
-                    </a>
-                    <button type="submit" class="submit-btn" id="submitBtn" disabled>
-                        <i class="fas fa-paper-plane"></i>
-                        Nộp bài
-                    </button>
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+                    <a href="{{ route('trangchinh') }}" style="background: #e0e0e0; color: #000; border: none; padding: 12px 24px; border-radius: 6px; font-size: 1rem; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;"> <i class="fas fa-arrow-left"></i> Quay về </a>
+                    <button type="submit" id="submitBtn" disabled style="background: #000; color: #fff; border: none; padding: 12px 24px; border-radius: 6px; font-size: 1rem; font-weight: 500; cursor: pointer;"> <i class="fas fa-paper-plane"></i> Nộp bài </button>
                 </div>
             </form>
         @else
-            <div class="empty-state">
-                <i class="fas fa-question-circle"></i>
-                <h3>Chưa có câu hỏi nào</h3>
+            <div style="text-align: center; padding: 60px 20px; color: #666; background: #fff; border-radius: 8px; margin-top: 32px;">
+                <i class="fas fa-question-circle" style="font-size: 3rem; margin-bottom: 16px; color: #e0e0e0;"></i>
+                <h3 style="font-size: 1.2rem; color: #000; margin-bottom: 8px;">Chưa có câu hỏi nào</h3>
                 <p>Chủ đề này chưa có câu hỏi để kiểm tra. Hãy thêm câu hỏi vào chủ đề này!</p>
-                <a href="{{ route('cauhoi.create') }}" class="back-btn" style="margin-top: 20px;">
-                    <i class="fas fa-plus"></i>
-                    Thêm câu hỏi
-                </a>
+                <a href="{{ route('cauhoi.create') }}" style="margin-top: 20px; display: inline-block; padding: 12px 24px; background: #000; color: #fff; text-decoration: none; border-radius: 6px; font-weight: 500;"> <i class="fas fa-plus"></i> Thêm câu hỏi </a>
             </div>
         @endif
     </div>

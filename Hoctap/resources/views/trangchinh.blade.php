@@ -28,7 +28,7 @@
                 </a>
             </nav>
             <!-- Account section pinned bottom-left -->
-            <div class="sidebar-account">
+            <div class="sidebar-account" style="display: flex; align-items: center; gap: 12px;">
                 <div class="user-menu" onclick="toggleUserMenu()">
                     <span>{{ substr($user->usergmail ?? 'User', 0, 2) }}</span>
                     <div class="user-dropdown" id="userDropdown">
@@ -41,9 +41,9 @@
                         </div>
                     </div>
                 </div>
-                <form method="POST" action="{{ route('signout') }}" class="logout-quick-form">
+                <form method="POST" action="{{ route('signout') }}" class="logout-quick-form" style="margin: 0;">
                     @csrf
-                    <button type="submit" class="logout-quick-btn">Đăng xuất</button>
+                    <button type="submit" class="logout-quick-btn" style="height: 44px; display: flex; align-items: center;">Đăng xuất</button>
                 </form>
             </div>
         </aside>

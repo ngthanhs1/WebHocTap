@@ -8,112 +8,158 @@
     <link rel="stylesheet" href="{{ asset('css/styles4.css') }}">
 </head>
 <body>
-    <div class="container">
-        <div class="main-content">
-            <div class="header">
-                <div class="breadcrumb-modern">
-                    <a href="{{ route('trangchinh') }}" class="breadcrumb-link">
-                        <i class="fas fa-arrow-left"></i>
-                        <span>Quay lại trang chính</span>
+    <div class="dashboard-container">
+        <!-- Top Navigation -->
+        <nav class="top-nav">
+            <div class="nav-content">
+                <a href="{{ route('trangchinh') }}" class="nav-back">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Quay lại</span>
+                </a>
+                <div class="nav-title">
+                    <i class="fas fa-book-open"></i>
+                    <span>Quản lý chủ đề</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Dashboard Content -->
+        <div class="dashboard-main">
+            <!-- Topic Overview Card -->
+            <div class="topic-overview-card">
+                <div class="topic-header">
+                    <div class="topic-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="topic-info">
+                        <h1 class="topic-title">{{ $topic->name }}</h1>
+                        <div class="topic-meta">
+                            <span class="meta-item">
+                                <i class="fas fa-user"></i>
+                                {{ $topic->user->username ?? 'Admin' }}
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-calendar"></i>
+                                {{ $topic->created_at->format('d/m/Y') }}
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-question-circle"></i>
+                                {{ $topic->questions->count() }} câu hỏi
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <a href="{{ route('topics.study', $topic) }}" class="action-btn primary">
+                        <i class="fas fa-book-reader"></i>
+                        <span>Ôn tập</span>
                     </a>
+                    <a href="{{ route('topics.test', $topic) }}" class="action-btn success">
+                        <i class="fas fa-play"></i>
+                        <span>Làm bài</span>
+                    </a>
+                    <a href="{{ route('questions.create') }}?topic_id={{ $topic->id }}" class="action-btn info">
+                        <i class="fas fa-plus"></i>
+                        <span>Thêm câu hỏi</span>
+                    </a>
+                    <a href="{{ route('topics.edit', $topic) }}" class="action-btn warning">
+                        <i class="fas fa-edit"></i>
+                        <span>Chỉnh sửa</span>
+                    </a>
+                    <button onclick="deleteTopic({{ $topic->id }})" class="action-btn danger">
+                        <i class="fas fa-trash"></i>
+                        <span>Xóa</span>
+                    </button>
                 </div>
             </div>
 
-            <div class="content-area">
-                <div class="quiz-header">
-                    <div class="quiz-title">
-                        <div class="quiz-icon">📋</div>
-                        <div class="title-text">
-                            <h1>{{ $topic->name }}</h1>
-                            <div class="title-meta">
-                                <span class="status-badge">Chủ đề</span>
-                                <span>{{ $topic->user->username ?? 'Admin' }}</span>
-                                <span>{{ $topic->created_at->format('d/m/Y') }}</span>
-                                <span>{{ $topic->questions->count() }} câu hỏi</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="action-buttons">
-                        <a href="{{ route('topics.edit', $topic) }}" class="btn">
-                            <i class="fas fa-edit"></i> Chỉnh sửa
-                        </a>
-                        <a href="{{ route('questions.create') }}?topic_id={{ $topic->id }}" class="btn btn-success">
-                            <i class="fas fa-plus"></i> Thêm câu hỏi
-                        </a>
-                        <button onclick="deleteTopic({{ $topic->id }})" class="btn btn-danger">
-                            <i class="fas fa-trash"></i> Xóa chủ đề
-                        </button>
-                        <button class="btn-primary">Bắt đầu ngay</button>
+            <!-- Status Messages -->
+            @if (session('ok') || session('success'))
+                <div class="status-message success">
+                    <i class="fas fa-check-circle"></i>
+                    <span>{{ session('ok') ?? session('success') }}</span>
+                </div>
+            @endif
+            
+            @if (session('error'))
+                <div class="status-message error">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>{{ session('error') }}</span>
+                </div>
+            @endif
+
+            <!-- Questions Management -->
+            <div class="questions-section">
+                <div class="section-header">
+                    <h2>
+                        <i class="fas fa-list-ul"></i>
+                        Danh sách câu hỏi
+                    </h2>
+                    <div class="section-stats">
+                        <span class="questions-count">{{ $topic->questions->count() }} câu hỏi</span>
                     </div>
                 </div>
 
-                <div class="quiz-content">
-                    @if (session('ok') || session('success'))
-                        <div class="alert-modern alert-success">
-                            <i class="fas fa-check-circle"></i>
-                            <span>{{ session('ok') ?? session('success') }}</span>
-                        </div>
-                    @endif
-                    
-                    @if (session('error'))
-                        <div class="alert-modern alert-error">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <span>{{ session('error') }}</span>
-                        </div>
-                    @endif
-
-                    @if ($topic->questions->count() > 0)
-                        <div class="quiz-info">
-                            <div class="quiz-stats">
-                                <strong>Danh sách câu hỏi</strong><br>
-                                {{ $topic->questions->count() }} câu hỏi
-                            </div>
-                        </div>
-
+                @if ($topic->questions->count() > 0)
+                    <div class="questions-grid">
                         @foreach($topic->questions as $index => $question)
-                            <div class="question" data-question-id="{{ $question->id }}">
-                                <div class="question-header">
-                                    <div class="question-number">{{ $index + 1 }}. NHIỀU LỰA CHỌN</div>
-                                    <div class="question-title">{{ $question->content }}</div>
-                                    <div class="question-actions">
-                                        <button onclick="toggleQuestion({{ $question->id }})" class="btn-icon" title="Xem/Ẩn đáp án">
-                                            <i class="fas fa-eye"></i>
+                            <div class="question-card" data-question-id="{{ $question->id }}">
+                                <div class="question-card-header">
+                                    <div class="question-number">
+                                        <span>Câu {{ $index + 1 }}</span>
+                                    </div>
+                                    <div class="question-actions-menu">
+                                        <button class="menu-toggle" onclick="toggleQuestionMenu({{ $question->id }})">
+                                            <i class="fas fa-ellipsis-v"></i>
                                         </button>
-                                        <a href="{{ route('questions.edit', $question) }}" class="btn-icon btn-edit" title="Sửa câu hỏi">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <button onclick="deleteQuestion({{ $question->id }})" class="btn-icon btn-delete" title="Xóa câu hỏi">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                        <div class="actions-dropdown" id="menu-{{ $question->id }}">
+                                            <button onclick="toggleAnswers({{ $question->id }})" class="action-item">
+                                                <i class="fas fa-eye"></i>
+                                                <span>Xem đáp án</span>
+                                            </button>
+                                            <a href="{{ route('questions.edit', $question) }}" class="action-item">
+                                                <i class="fas fa-edit"></i>
+                                                <span>Chỉnh sửa</span>
+                                            </a>
+                                            <button onclick="deleteQuestion({{ $question->id }})" class="action-item danger">
+                                                <i class="fas fa-trash"></i>
+                                                <span>Xóa câu hỏi</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <div class="choices-container" id="choices-{{ $question->id }}">
-                                    <div class="choices-header">
-                                        <h4>Đáp án:</h4>
-                                        <button onclick="addChoice({{ $question->id }})" class="btn-add-choice">
+                                <div class="question-content">
+                                    <p class="question-text">{{ $question->content }}</p>
+                                </div>
+                                
+                                <div class="question-answers" id="answers-{{ $question->id }}" style="display: none;">
+                                    <div class="answers-header">
+                                        <span>Các lựa chọn:</span>
+                                        <button onclick="addChoice({{ $question->id }})" class="add-choice-btn">
                                             <i class="fas fa-plus"></i>
-                                            <span>Thêm đáp án</span>
+                                            Thêm đáp án
                                         </button>
                                     </div>
-                                    
-                                    <div class="options">
+                                    <div class="choices-list">
                                         @foreach($question->choices as $choiceIndex => $choice)
-                                            <div class="option {{ $choice->is_correct ? 'correct' : 'incorrect' }}">
-                                                <div class="option-radio">
+                                            <div class="choice-item {{ $choice->is_correct ? 'correct' : '' }}">
+                                                <div class="choice-indicator">
                                                     @if($choice->is_correct)
-                                                        <i class="fas fa-check"></i>
+                                                        <i class="fas fa-check-circle"></i>
                                                     @else
-                                                        <i class="fas fa-times"></i>
+                                                        <i class="fas fa-circle"></i>
                                                     @endif
                                                 </div>
                                                 <div class="choice-letter">{{ chr(65 + $choiceIndex) }}</div>
-                                                <div class="option-text">{{ $choice->content }}</div>
+                                                <div class="choice-text">{{ $choice->content }}</div>
                                                 <div class="choice-actions">
-                                                    <button onclick="editChoice({{ $choice->id }}, '{{ $choice->content }}', {{ $choice->is_correct ? 'true' : 'false' }})" class="btn-icon-small" title="Sửa đáp án">
+                                                    <button onclick="editChoice({{ $choice->id }}, '{{ $choice->content }}', {{ $choice->is_correct ? 'true' : 'false' }})" class="choice-action edit">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
-                                                    <button onclick="deleteChoice({{ $choice->id }})" class="btn-icon-small btn-delete" title="Xóa đáp án">
+                                                    <button onclick="deleteChoice({{ $choice->id }})" class="choice-action delete">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </div>
@@ -123,20 +169,20 @@
                                 </div>
                             </div>
                         @endforeach
-                    @else
-                        <div class="empty-state">
-                            <div class="empty-illustration">
-                                <i class="fas fa-question-circle"></i>
-                            </div>
-                            <h3>Chưa có câu hỏi nào</h3>
-                            <p>Hãy tạo câu hỏi đầu tiên để bắt đầu xây dựng bộ đề của bạn!</p>
-                            <a href="{{ route('questions.create') }}?topic_id={{ $topic->id }}" class="btn btn-primary">
-                                <i class="fas fa-plus"></i>
-                                <span>Tạo câu hỏi đầu tiên</span>
-                            </a>
+                    </div>
+                @else
+                    <div class="empty-questions">
+                        <div class="empty-icon">
+                            <i class="fas fa-question-circle"></i>
                         </div>
-                    @endif
-                </div>
+                        <h3>Chưa có câu hỏi nào</h3>
+                        <p>Hãy tạo câu hỏi đầu tiên để bắt đầu xây dựng bộ đề của bạn!</p>
+                        <a href="{{ route('questions.create') }}?topic_id={{ $topic->id }}" class="create-first-btn">
+                            <i class="fas fa-plus"></i>
+                            Tạo câu hỏi đầu tiên
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -198,21 +244,35 @@
     </div>
 
 <script>
-// Toggle question visibility
-function toggleQuestion(questionId) {
-    const choicesContainer = document.getElementById('choices-' + questionId);
-    const toggleBtn = event.target.closest('.btn-icon');
-    const icon = toggleBtn.querySelector('i');
+// Toggle question menu
+function toggleQuestionMenu(questionId) {
+    const menu = document.getElementById('menu-' + questionId);
+    const allMenus = document.querySelectorAll('.actions-dropdown');
     
-    if (choicesContainer.style.display === 'none' || !choicesContainer.style.display) {
-        choicesContainer.style.display = 'block';
-        icon.className = 'fas fa-eye-slash';
-        toggleBtn.title = 'Ẩn đáp án';
+    // Close all other menus
+    allMenus.forEach(m => {
+        if (m.id !== 'menu-' + questionId) {
+            m.classList.remove('active');
+        }
+    });
+    
+    // Toggle current menu
+    menu.classList.toggle('active');
+}
+
+// Toggle answers visibility
+function toggleAnswers(questionId) {
+    const answersContainer = document.getElementById('answers-' + questionId);
+    const isVisible = answersContainer.style.display !== 'none';
+    
+    if (isVisible) {
+        answersContainer.style.display = 'none';
     } else {
-        choicesContainer.style.display = 'none';
-        icon.className = 'fas fa-eye';
-        toggleBtn.title = 'Xem đáp án';
+        answersContainer.style.display = 'block';
     }
+    
+    // Close menu after action
+    document.getElementById('menu-' + questionId).classList.remove('active');
 }
 
 // Delete topic with modern confirm
@@ -410,22 +470,30 @@ function scrollToQuestion(questionId) {
     }
 }
 
-// Enhanced interactions từ code mẫu
+// Enhanced interactions
 document.addEventListener('DOMContentLoaded', function() {
-    // Button hover effects
-    document.querySelectorAll('.btn').forEach(btn => {
-        btn.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-2px)';
-        });
-        
-        btn.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-        });
+    // Close menus when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.question-actions-menu')) {
+            document.querySelectorAll('.actions-dropdown').forEach(menu => {
+                menu.classList.remove('active');
+            });
+        }
     });
 
-    // Question animations
-    const questions = document.querySelectorAll('.question');
-    
+    // Auto-hide status messages
+    const statusMessages = document.querySelectorAll('.status-message');
+    statusMessages.forEach(message => {
+        setTimeout(() => {
+            message.style.opacity = '0';
+            setTimeout(() => {
+                message.remove();
+            }, 300);
+        }, 5000);
+    });
+
+    // Question card animations
+    const questionCards = document.querySelectorAll('.question-card');
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -435,8 +503,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    questions.forEach(question => {
-        observer.observe(question);
+    questionCards.forEach(card => {
+        observer.observe(card);
+    });
+
+    // Action buttons hover effects
+    document.querySelectorAll('.action-btn').forEach(btn => {
+        btn.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
     });
 });
 </script>
