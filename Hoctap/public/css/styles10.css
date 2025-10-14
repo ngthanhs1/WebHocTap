@@ -12,7 +12,7 @@ body {
 }
 
 .stats-header {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: #96969b;
     color: #fff;
     border-radius: 16px;
     padding: 24px;
@@ -161,7 +161,7 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: #111827;
     color: #fff;
     border: none;
 }

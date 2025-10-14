@@ -16,69 +16,69 @@
         $donutPct = $tongCau > 0 ? round(($tongDung / max($tongCau, 1)) * 100, 2) : 50;
     @endphp
     </head>
-<body>
+<body style="background: #fff; color: #000;">
     <a href="{{ route('trangchinh') }}" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Trang chính</a>
 <div class="stats-container">
     <div class="stats-header">
-        <div class="stats-title"><i class="fas fa-chart-pie"></i> Thống kê chủ đề</div>
-        <div class="kpi">
-            <div class="kpi-item">
-                <div class="label">Số chủ đề đã làm</div>
-                <div class="value">{{ $totalAttempted }}</div>
+        <div class="stats-title" style="font-size: 1.4rem; font-weight: 700; color: #000; margin-bottom: 16px;"><i class="fas fa-chart-pie"></i> Thống kê chủ đề</div>
+        <div class="kpi" style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <div class="kpi-item" style="background: #fff; border: 1px solid #e0e0e0; padding: 12px 16px; border-radius: 8px; min-width: 120px; color: #000;">
+                <div class="label" style="font-size: .95rem; color: #666;">Số chủ đề đã làm</div>
+                <div class="value" style="font-size: 1.2rem; font-weight: 700;">{{ $totalAttempted }}</div>
             </div>
-            <div class="kpi-item">
-                <div class="label">Độ chính xác trung bình</div>
-                <div class="value">{{ $avgAccuracy }}%</div>
+            <div class="kpi-item" style="background: #fff; border: 1px solid #e0e0e0; padding: 12px 16px; border-radius: 8px; min-width: 120px; color: #000;">
+                <div class="label" style="font-size: .95rem; color: #666;">Độ chính xác trung bình</div>
+                <div class="value" style="font-size: 1.2rem; font-weight: 700;">{{ $avgAccuracy }}%</div>
             </div>
-            <div class="kpi-item">
-                <div class="label">Tổng chủ đề của bạn</div>
-                <div class="value">{{ $totalTopics ?? 0 }}</div>
+            <div class="kpi-item" style="background: #fff; border: 1px solid #e0e0e0; padding: 12px 16px; border-radius: 8px; min-width: 120px; color: #000;">
+                <div class="label" style="font-size: .95rem; color: #666;">Tổng chủ đề của bạn</div>
+                <div class="value" style="font-size: 1.2rem; font-weight: 700;">{{ $totalTopics ?? 0 }}</div>
             </div>
-            <div class="kpi-item">
-                <div class="label">Tổng câu đúng</div>
-                <div class="value">{{ $tongDung }}</div>
+            <div class="kpi-item" style="background: #fff; border: 1px solid #e0e0e0; padding: 12px 16px; border-radius: 8px; min-width: 120px; color: #000;">
+                <div class="label" style="font-size: .95rem; color: #666;">Tổng câu đúng</div>
+                <div class="value" style="font-size: 1.2rem; font-weight: 700;">{{ $tongDung }}</div>
             </div>
-            <div class="kpi-item">
-                <div class="label">Tổng câu sai</div>
-                <div class="value">{{ $tongSai }}</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card" style="margin-top:20px;">
-        <div class="card-header">
-            <div class="card-title"><i class="fas fa-chart-donut"></i> Tỉ lệ đúng/sai tổng thể</div>
-        </div>
-        <div class="card-body" style="padding: 20px;">
-            <div style="max-width: 520px; margin: 0 auto; text-align:center;">
-                <div id="donutFallback" class="donut-fallback" style="--pct: {{ $donutPct }}%;"></div>
-                <canvas id="donutChart" width="520" height="520"></canvas>
-                <div id="donutNote" class="muted" style="text-align:center;margin-top:8px;"></div>
+            <div class="kpi-item" style="background: #fff; border: 1px solid #e0e0e0; padding: 12px 16px; border-radius: 8px; min-width: 120px; color: #000;">
+                <div class="label" style="font-size: .95rem; color: #666;">Tổng câu sai</div>
+                <div class="value" style="font-size: 1.2rem; font-weight: 700;">{{ $tongSai }}</div>
             </div>
         </div>
     </div>
 
     <div class="card" style="margin-top:20px;">
-        <div class="card-header">
-            <div class="card-title"><i class="fas fa-list"></i> Bảng thống kê theo chủ đề f</div>
+        <div class="card-header" style="background: #fff; border-bottom: 1px solid #e0e0e0; padding: 16px 18px;">
+            <div class="card-title" style="font-weight: 700; color: #000;"><i class="fas fa-chart-donut"></i> Tỉ lệ đúng/sai tổng thể</div>
+        </div>
+        <div class="card-body" style="padding: 20px; background: #fff;">
+            <div style="max-width: 320px; margin: 0 auto; text-align:center;">
+                <div id="donutFallback" style="width: 180px; height: 180px; margin: 0 auto 8px auto; border-radius: 50%; background: conic-gradient(#10b981 {{ $donutPct }}%, #ef4444 0); mask: radial-gradient(circle 48% at 50% 50%, transparent 49%, #000 50%); position: relative;"></div>
+                <canvas id="donutChart" width="180" height="180"></canvas>
+                <div id="donutNote" style="text-align:center;margin-top:8px; color: #666; font-size: 15px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+        <div class="card-header" style="background: #fff; border-bottom: 1px solid #e0e0e0; padding: 16px 18px;">
+            <div class="card-title" style="font-weight: 700; color: #000;"><i class="fas fa-list"></i> Bảng thống kê theo chủ đề</div>
         </div>
     @if($rows->isEmpty())
-            <div class="empty">
-                <i class="fas fa-clipboard-list"></i>
+            <div class="empty" style="text-align: center; padding: 48px 16px; color: #666; background: #fff; border-radius: 8px;">
+                <i class="fas fa-clipboard-list" style="font-size: 3rem; color: #e0e0e0; margin-bottom: 12px;"></i>
                 <div>Chưa có dữ liệu thống kê. Hãy làm thử một bài kiểm tra/ôn tập để lưu kết quả.</div>
-                <div class="back"><a href="{{ route('trangchinh') }}" class="btn"><i class="fas fa-home"></i> Về trang chính</a></div>
+                <div class="back" style="margin-top: 16px;"><a href="{{ route('trangchinh') }}" class="btn" style="background: #000; color: #fff; border-radius: 6px; padding: 10px 20px; text-decoration: none;"><i class="fas fa-home"></i> Về trang chính</a></div>
             </div>
         @else
-            <div style="overflow-x:auto;">
-                <table class="table">
+            <div style="overflow-x:auto; background: #fff; border-radius: 8px;">
+                <table style="width: 100%; border-collapse: collapse;">
                     <thead>
-                        <tr>
-                            <th>Chủ đề</th>
-                            <th>ID</th>
-                            <th>Tỉ lệ đúng</th>
-                            <th>Số lần làm</th>
-                            <th>Ngày tạo</th>
-                            <th style="text-align:right;">Hành động</th>
+                        <tr style="background: #f5f5f5;">
+                            <th style="padding: 12px 8px; color: #666; font-size: 15px; font-weight: 600;">Chủ đề</th>
+                            <th style="padding: 12px 8px; color: #666; font-size: 15px; font-weight: 600;">ID</th>
+                            <th style="padding: 12px 8px; color: #666; font-size: 15px; font-weight: 600;">Tỉ lệ đúng</th>
+                            <th style="padding: 12px 8px; color: #666; font-size: 15px; font-weight: 600;">Số lần làm</th>
+                            <th style="padding: 12px 8px; color: #666; font-size: 15px; font-weight: 600;">Ngày tạo</th>
+                            <th style="padding: 12px 8px; color: #666; font-size: 15px; font-weight: 600; text-align:right;">Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -87,23 +87,21 @@
                                 $acc = (float)$row->tong_phan_tram_dung;
                                 $badgeClass = $acc >= 80 ? 'good' : ($acc >= 50 ? 'medium' : 'bad');
                             @endphp
-                            <tr>
-                                <td class="topic-name">{{ $row->name }}</td>
-                                <td>#{{ $row->id }}</td>
-                                <td>
-                                    <span class="badge {{ $badgeClass }}">
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="font-weight: 600; color: #222; padding: 12px 8px;">{{ $row->name }}</td>
+                                <td style="color: #888; padding: 12px 8px;">#{{ $row->id }}</td>
+                                <td style="padding: 12px 8px;">
+                                    <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; font-size: .95rem; font-weight: 600; background: {{ $badgeClass==='good' ? '#ecfdf5' : ($badgeClass==='medium' ? '#fffbeb' : '#fef2f2') }}; color: {{ $badgeClass==='good' ? '#065f46' : ($badgeClass==='medium' ? '#92400e' : '#991b1b') }};">
                                         @if($badgeClass==='good')<i class="fas fa-check-circle"></i>@elseif($badgeClass==='medium')<i class="fas fa-minus-circle"></i>@else<i class="fas fa-times-circle"></i>@endif
                                         {{ $acc }}%
                                     </span>
                                 </td>
-                                <td>{{ (int)$row->so_lan_lam }}</td>
-                                <td class="muted">{{ 
-                                    \Carbon\Carbon::parse($row->created_at)->format('d/m/Y H:i')
-                                }}</td>
-                                <td style="text-align:right;">
-                                    <div class="row-actions">
-                                        <a href="{{ url('/topics/'.$row->id.'/study') }}" class="btn btn-study"><i class="fas fa-book-open"></i> Ôn tập</a>
-                                        <a href="{{ url('/topics/'.$row->id.'/test') }}" class="btn btn-test"><i class="fas fa-clipboard-check"></i> Làm bài</a>
+                                <td style="padding: 12px 8px;">{{ (int)$row->so_lan_lam }}</td>
+                                <td style="color: #888; font-size: 15px; padding: 12px 8px;">{{ \Carbon\Carbon::parse($row->created_at)->format('d/m/Y H:i') }}</td>
+                                <td style="text-align:right; padding: 12px 8px;">
+                                    <div style="display: flex; gap: 8px;">
+                                        <a href="{{ url('/topics/'.$row->id.'/study') }}" style="background: #000; color: #fff; border-radius: 6px; padding: 8px 14px; text-decoration: none; font-weight: 500; font-size: 15px; display: inline-flex; align-items: center; gap: 6px;"><i class="fas fa-book-open"></i> Ôn tập</a>
+                                        <a href="{{ url('/topics/'.$row->id.'/test') }}" style="background: #000; color: #fff; border-radius: 6px; padding: 8px 14px; text-decoration: none; font-weight: 500; font-size: 15px; display: inline-flex; align-items: center; gap: 6px;"><i class="fas fa-clipboard-check"></i> Làm bài</a>
                                     </div>
                                 </td>
                             </tr>
