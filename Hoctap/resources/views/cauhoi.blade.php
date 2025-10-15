@@ -4,288 +4,294 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tạo câu hỏi</title>
+    <link rel="stylesheet" href="{{ asset('css/styles4.css') }}">
     <link rel="stylesheet" href="{{ asset('css/styles3.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Tạo câu hỏi</h1>
-            <div class="controls">
-                <a href="{{ route('trangchinh') }}" class="btn">← Quay lại</a>
-                <button class="btn btn-primary" onclick="exportToTopic()">Xuất ra chủ đề</button>
+        <!-- Navigation Header -->
+        <nav class="navbar">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <a href="{{ route('trangchinh') }}">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Hệ thống học tập</span>
+                    </a>
+                </div>
+                <div class="nav-links">
+                    <a href="{{ route('trangchinh') }}" class="nav-link">
+                        <i class="fas fa-arrow-left"></i>
+                        Quay lại
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-content">
+                <h1 class="page-title">
+                    <i class="fas fa-plus-circle"></i>
+                    Tạo câu hỏi mới
+                </h1>
+                <p class="page-subtitle">Xây dựng câu hỏi rồi xuất sang chủ đề</p>
             </div>
         </div>
 
-        <!-- Form tạo câu hỏi -->
-        <div class="quiz-container">
-            <!-- Câu hỏi -->
-            <div class="question-input">
-                <h3 style="color: white; margin-bottom: 15px;">Nội dung câu hỏi</h3>
-                <input type="text" id="questionText" placeholder="Nhập câu hỏi vào đây..." maxlength="500">
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="form-card">
+                <!-- Question Content Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-question-circle"></i>
+                        Nội dung câu hỏi
+                    </h3>
+                    <div class="form-group">
+                        <input type="text" id="questionText" placeholder="Nhập câu hỏi vào đây..." maxlength="500" required>
+                    </div>
+                </div>
+
+                <!-- Answer Options Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-list-ul"></i>
+                        Các lựa chọn đáp án
+                    </h3>
+                    <p class="section-description">Click vào thẻ đáp án để chọn đáp án đúng</p>
+
+                    <div class="choices-grid">
+                        <div class="choice-card" onclick="selectCorrectAnswer(0)" data-choice="0">
+                            <div class="choice-header">
+                                <div class="choice-label">A</div>
+                                <div class="correct-indicator">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Đáp án đúng</span>
+                                </div>
+                            </div>
+                            <input type="text" class="choice-input" placeholder="Đáp án A (bắt buộc)" maxlength="200">
+                            <input type="hidden" class="correct-value" value="0">
+                        </div>
+
+                        <div class="choice-card" onclick="selectCorrectAnswer(1)" data-choice="1">
+                            <div class="choice-header">
+                                <div class="choice-label">B</div>
+                                <div class="correct-indicator">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Đáp án đúng</span>
+                                </div>
+                            </div>
+                            <input type="text" class="choice-input" placeholder="Đáp án B (bắt buộc)" maxlength="200">
+                            <input type="hidden" class="correct-value" value="0">
+                        </div>
+
+                        <div class="choice-card" onclick="selectCorrectAnswer(2)" data-choice="2">
+                            <div class="choice-header">
+                                <div class="choice-label">C</div>
+                                <div class="correct-indicator">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Đáp án đúng</span>
+                                </div>
+                            </div>
+                            <input type="text" class="choice-input" placeholder="Đáp án C (tùy chọn)" maxlength="200">
+                            <input type="hidden" class="correct-value" value="0">
+                        </div>
+
+                        <div class="choice-card" onclick="selectCorrectAnswer(3)" data-choice="3">
+                            <div class="choice-header">
+                                <div class="choice-label">D</div>
+                                <div class="correct-indicator">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Đáp án đúng</span>
+                                </div>
+                            </div>
+                            <input type="text" class="choice-input" placeholder="Đáp án D (tùy chọn)" maxlength="200">
+                            <input type="hidden" class="correct-value" value="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="clearForm()">
+                        <i class="fas fa-eraser"></i>
+                        Xóa nội dung
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="addQuestion()">
+                        <i class="fas fa-plus"></i>
+                        Thêm câu hỏi
+                    </button>
+                </div>
             </div>
 
-            <!-- Đáp án -->
-            <div class="answers-grid" style="margin-top: 20px;">
-                <h3 style="color: white; margin-bottom: 15px; grid-column: 1 / -1;">Các đáp án (tối thiểu 2 đáp án)</h3>
-                
-                <div class="answer-card" onclick="selectCorrectAnswer(0)">
-                    <label style="color: white; font-weight: bold; display: block; margin-bottom: 8px;">A.</label>
-                    <input type="text" class="answer-input" placeholder="Đáp án A (bắt buộc)" maxlength="200">
-                    <input type="hidden" class="correct-answer" value="false">
-                    <div class="correct-indicator">
-                        <i class="check-icon">✓</i>
-                        <span>Đáp án đúng</span>
+            <!-- Saved Questions List -->
+            <div class="saved-card">
+                <div style="display:flex; align-items:center; justify-content: space-between;">
+                    <h3 class="section-title" style="margin:0;">
+                        <i class="fas fa-list"></i>
+                        Danh sách câu hỏi đã tạo (<span id="questionCount">0</span> câu)
+                    </h3>
+                    <div>
+                        <button type="button" class="btn btn-secondary" onclick="exportToTopic()">
+                            <i class="fas fa-folder-plus"></i>
+                            Xuất ra chủ đề mới
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="saveAndSelectTopic()">
+                            <i class="fas fa-save"></i>
+                            Lưu vào chủ đề có sẵn
+                        </button>
                     </div>
                 </div>
-                
-                <div class="answer-card" onclick="selectCorrectAnswer(1)">
-                    <label style="color: white; font-weight: bold; display: block; margin-bottom: 8px;">B.</label>
-                    <input type="text" class="answer-input" placeholder="Đáp án B (bắt buộc)" maxlength="200">
-                    <input type="hidden" class="correct-answer" value="false">
-                    <div class="correct-indicator">
-                        <i class="check-icon">✓</i>
-                        <span>Đáp án đúng</span>
-                    </div>
+                <div id="savedQuestions" style="margin-top:12px;">
+                    <div class="section-description">Chưa có câu hỏi nào được lưu</div>
                 </div>
-                
-                <div class="answer-card" onclick="selectCorrectAnswer(2)">
-                    <label style="color: white; font-weight: bold; display: block; margin-bottom: 8px;">C.</label>
-                    <input type="text" class="answer-input" placeholder="Đáp án C (tùy chọn)" maxlength="200">
-                    <input type="hidden" class="correct-answer" value="false">
-                    <div class="correct-indicator">
-                        <i class="check-icon">✓</i>
-                        <span>Đáp án đúng</span>
-                    </div>
-                </div>
-                
-                <div class="answer-card" onclick="selectCorrectAnswer(3)">
-                    <label style="color: white; font-weight: bold; display: block; margin-bottom: 8px;">D.</label>
-                    <input type="text" class="answer-input" placeholder="Đáp án D (tùy chọn)" maxlength="200">
-                    <input type="hidden" class="correct-answer" value="false">
-                    <div class="correct-indicator">
-                        <i class="check-icon">✓</i>
-                        <span>Đáp án đúng</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Nút thêm câu hỏi -->
-            <div style="text-align: center; margin-top: 30px;">
-                <button type="button" class="btn" onclick="addQuestion()" style="padding: 15px 30px; font-size: 18px; margin-right: 10px;">
-                    ➕ Thêm câu hỏi
-                </button>
             </div>
         </div>
 
-        <!-- Danh sách câu hỏi đã tạo -->
-        <div class="quiz-list">
-            <h2 style="color: white; margin-bottom: 20px;">Danh sách câu hỏi đã tạo (<span id="questionCount">0</span> câu)</h2>
-            <div id="savedQuestions">
-                <div class="empty-state">Chưa có câu hỏi nào được lưu</div>
-            </div>
+        <!-- Success/Error Messages -->
+        <div id="flashSuccess" class="alert alert-success" style="display:none;">
+            <i class="fas fa-check-circle"></i>
+            Đã lưu vào session thành công!
+        </div>
+        <div id="flashError" class="alert alert-error" style="display:none;">
+            <i class="fas fa-exclamation-circle"></i>
+            Có lỗi xảy ra, vui lòng thử lại.
         </div>
     </div>
 
-<script>
-let savedQuestions = [];
+    <script>
+        let savedQuestions = [];
 
-// Chọn đáp án đúng
-function selectCorrectAnswer(index) {
-    // Bỏ chọn tất cả các đáp án khác
-    document.querySelectorAll('.answer-card').forEach((card, i) => {
-        card.classList.remove('correct');
-        card.querySelector('.correct-answer').value = 'false';
-    });
-    
-    // Chọn đáp án hiện tại
-    const selectedCard = document.querySelectorAll('.answer-card')[index];
-    selectedCard.classList.add('correct');
-    selectedCard.querySelector('.correct-answer').value = 'true';
-}
-
-// Ngăn click vào input trigger selectCorrectAnswer
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.answer-input').forEach(input => {
-        input.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-        
-        input.addEventListener('focus', function(e) {
-            e.stopPropagation();
-        });
-    });
-});
-
-// Thêm câu hỏi vào danh sách
-function addQuestion() {
-    const questionText = document.getElementById('questionText').value.trim();
-    const answerInputs = document.querySelectorAll('.answer-input');
-    const correctAnswers = document.querySelectorAll('.correct-answer');
-    
-    if (!questionText) {
-        alert('Vui lòng nhập nội dung câu hỏi!');
-        return;
-    }
-    
-    // Kiểm tra có đáp án đúng được chọn không
-    let hasCorrectAnswer = false;
-    correctAnswers.forEach(input => {
-        if (input.value === 'true') {
-            hasCorrectAnswer = true;
-        }
-    });
-    
-    if (!hasCorrectAnswer) {
-        alert('Vui lòng chọn đáp án đúng bằng cách click vào card đáp án!');
-        return;
-    }
-    
-    // Lấy các đáp án có nội dung
-    const choices = [];
-    answerInputs.forEach((input, index) => {
-        if (input.value.trim()) {
-            choices.push({
-                content: input.value.trim(),
-                is_correct: correctAnswers[index].value === 'true'
+        // Toggle correct choice like create page
+        function selectCorrectAnswer(index) {
+            document.querySelectorAll('.choice-card').forEach((card) => {
+                card.classList.remove('selected');
+                card.querySelector('.correct-value').value = '0';
             });
+            const selectedCard = document.querySelectorAll('.choice-card')[index];
+            selectedCard.classList.add('selected');
+            selectedCard.querySelector('.correct-value').value = '1';
         }
-    });
-    
-    if (choices.length < 2) {
-        alert('Cần tối thiểu 2 đáp án có nội dung!');
-        return;
-    }
-    
-    // Kiểm tra đáp án được chọn có nội dung không
-    let correctAnswerHasContent = false;
-    choices.forEach(choice => {
-        if (choice.is_correct && choice.content.trim()) {
-            correctAnswerHasContent = true;
+
+        // Prevent click bubbling from inputs
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.choice-input').forEach(input => {
+                input.addEventListener('click', function(e) { e.stopPropagation(); });
+                input.addEventListener('focus', function(e) { e.stopPropagation(); });
+            });
+        });
+
+        // Build question object and append to list
+        function addQuestion() {
+            const questionText = document.getElementById('questionText').value.trim();
+            const choiceInputs = document.querySelectorAll('.choice-input');
+            const correctFlags = document.querySelectorAll('.correct-value');
+
+            if (!questionText) { alert('Vui lòng nhập nội dung câu hỏi!'); return; }
+
+            let hasCorrect = false;
+            correctFlags.forEach(i => { if (i.value === '1') hasCorrect = true; });
+            if (!hasCorrect) { alert('Vui lòng chọn đáp án đúng bằng cách click vào thẻ đáp án!'); return; }
+
+            const choices = [];
+            choiceInputs.forEach((input, idx) => {
+                if (input.value.trim()) {
+                    choices.push({ content: input.value.trim(), is_correct: correctFlags[idx].value === '1' });
+                }
+            });
+            if (choices.length < 2) { alert('Cần tối thiểu 2 đáp án có nội dung!'); return; }
+
+            let correctHasContent = false;
+            choices.forEach(c => { if (c.is_correct && c.content.trim()) correctHasContent = true; });
+            if (!correctHasContent) { alert('Đáp án được chọn làm đáp án đúng phải có nội dung!'); return; }
+
+            savedQuestions.push({ content: questionText, choices });
+            updateQuestionsList();
+            clearForm();
         }
-    });
-    
-    if (!correctAnswerHasContent) {
-        alert('Đáp án được chọn làm đáp án đúng phải có nội dung!');
-        return;
-    }
-    
-    // Thêm câu hỏi vào danh sách
-    const question = {
-        content: questionText,
-        choices: choices
-    };
-    
-    savedQuestions.push(question);
-    updateQuestionsList();
-    clearForm();
-    
-    alert('Đã thêm câu hỏi thành công!');
-}
 
-// Cập nhật danh sách câu hỏi
-function updateQuestionsList() {
-    document.getElementById('questionCount').textContent = savedQuestions.length;
-    
-    const container = document.getElementById('savedQuestions');
-    
-    if (savedQuestions.length === 0) {
-        container.innerHTML = '<div class="empty-state">Chưa có câu hỏi nào được lưu</div>';
-        return;
-    }
-    
-    let html = '';
-    savedQuestions.forEach((question, index) => {
-        html += `
-            <div class="quiz-item">
-                <div class="quiz-question">Câu ${index + 1}: ${question.content}</div>
-                <div class="quiz-answers">
-                    ${question.choices.map((choice, choiceIndex) => `
-                        <div class="quiz-answer ${choice.is_correct ? 'correct' : ''}">
-                            ${String.fromCharCode(65 + choiceIndex)}: ${choice.content}
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
-    });
-    
-    container.innerHTML = html;
-}
-
-// Xóa form
-function clearForm() {
-    document.getElementById('questionText').value = '';
-    document.querySelectorAll('.answer-input').forEach(input => input.value = '');
-    document.querySelectorAll('.correct-answer').forEach(input => input.value = 'false');
-    document.querySelectorAll('.answer-card').forEach(card => card.classList.remove('correct'));
-}
-
-// Xuất ra chủ đề (lưu vào session và chuyển trang)
-function exportToTopic() {
-    if (savedQuestions.length === 0) {
-        alert('Chưa có câu hỏi nào để xuất!');
-        return;
-    }
-    
-    // Lưu vào session
-    fetch('/cauhoi/save-session', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({
-            questions: savedQuestions
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Chuyển đến trang tạo chủ đề
-            window.location.href = '/chude/create';
-        } else {
-            alert('Có lỗi xảy ra khi lưu!');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Có lỗi xảy ra khi lưu!');
-    });
-}
-
-// Check nếu đang thêm câu hỏi vào chủ đề có sẵn
-const urlParams = new URLSearchParams(window.location.search);
-const topicId = urlParams.get('topic_id');
-
-if (topicId) {
-    // Đang thêm vào chủ đề có sẵn - thay đổi button xuất
-    const exportBtn = document.querySelector('button[onclick="exportToTopic()"]');
-    if (exportBtn) {
-        exportBtn.textContent = '💾 Lưu vào chủ đề';
-        exportBtn.onclick = function() {
-            addToExistingTopic(topicId);
-        };
-    }
-}
-
-// Thêm câu hỏi vào chủ đề có sẵn
-        function addToExistingTopic() {
-            if (questions.length === 0) {
-                alert('Vui lòng tạo ít nhất một câu hỏi trước!');
+        function updateQuestionsList() {
+            document.getElementById('questionCount').textContent = savedQuestions.length;
+            const container = document.getElementById('savedQuestions');
+            if (savedQuestions.length === 0) {
+                container.innerHTML = '<div class="section-description">Chưa có câu hỏi nào được lưu</div>';
                 return;
             }
-            
-            // Lưu câu hỏi vào session trước
-            saveQuestionsToSession().then(function() {
-                // Chuyển đến trang chọn chủ đề
-                window.location.href = '{{ route("topics.select") }}';
-            }).catch(function(error) {
-                console.error('Lỗi khi lưu câu hỏi:', error);
-                alert('Có lỗi xảy ra khi lưu câu hỏi. Vui lòng thử lại!');
+            let html = '';
+            savedQuestions.forEach((q, i) => {
+                html += `
+                    <div class="quiz-item">
+                        <div class="quiz-question">Câu ${i + 1}: ${q.content}</div>
+                        <div class="quiz-answers">
+                            ${q.choices.map((ch, ci) => `
+                                <div class="quiz-answer ${ch.is_correct ? 'correct' : ''}">
+                                    ${String.fromCharCode(65 + ci)}: ${ch.content}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function clearForm() {
+            document.getElementById('questionText').value = '';
+            document.querySelectorAll('.choice-input').forEach(i => i.value = '');
+            document.querySelectorAll('.correct-value').forEach(i => i.value = '0');
+            document.querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected'));
+        }
+
+        // Save questions to session
+        function saveQuestionsToSession() {
+            if (savedQuestions.length === 0) {
+                return Promise.reject(new Error('empty'));
+            }
+            return fetch('/cauhoi/save-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ questions: savedQuestions })
+            }).then(r => r.json()).then(data => {
+                if (data.success) {
+                    document.getElementById('flashSuccess').style.display = 'flex';
+                    return true;
+                }
+                document.getElementById('flashError').style.display = 'flex';
+                throw new Error('failed');
+            }).catch(err => {
+                document.getElementById('flashError').style.display = 'flex';
+                throw err;
             });
         }
-</script>
+
+        // Export to new topic (go to create topic page)
+        function exportToTopic() {
+            if (savedQuestions.length === 0) { alert('Chưa có câu hỏi nào để xuất!'); return; }
+            saveQuestionsToSession().then(() => {
+                window.location.href = '/chude/create';
+            });
+        }
+
+        // Save and go select existing topic
+        function saveAndSelectTopic() {
+            if (savedQuestions.length === 0) { alert('Chưa có câu hỏi nào để lưu!'); return; }
+            saveQuestionsToSession().then(() => {
+                window.location.href = '{{ route("topics.select") }}';
+            }).catch(() => {});
+        }
+
+        // If topic_id provided, change primary action to save to that topic
+        const urlParams = new URLSearchParams(window.location.search);
+        const topicId = urlParams.get('topic_id');
+        if (topicId) {
+            // Overwrite saveAndSelectTopic to redirect directly with topic id if needed in future
+        }
+    </script>
 
 </body>
 </html>
