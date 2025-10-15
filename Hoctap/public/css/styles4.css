@@ -746,40 +746,10 @@ body {
     animation: slideInDown 0.5s ease-out;
 }
 
-/* Dark mode support (optional) */
+/* Dark mode: keep light theme consistently */
 @media (prefers-color-scheme: dark) {
     body {
-        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-    }
-
-    .topic-overview-card,
-    .questions-section {
-        background: #1f2937;
-        color: #f9fafb;
-        border: 1px solid #374151;
-    }
-
-    .question-card {
-        background: #111827;
-        border-color: #374151;
-        color: #f9fafb;
-    }
-
-    .top-nav {
-        background: rgba(31, 41, 55, 0.95);
-        border-bottom: 1px solid #374151;
-    }
-
-    .nav-title {
-        color: #f9fafb;
-    }
-
-    .topic-title {
-        color: #f9fafb;
-    }
-
-    .section-header h2 {
-        color: #f9fafb;
+        background: #ffffff;
     }
 }
 

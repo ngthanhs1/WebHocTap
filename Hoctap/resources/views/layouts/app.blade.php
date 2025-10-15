@@ -19,8 +19,9 @@
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #111827;
         }
 
         .glass-container {
@@ -32,12 +33,11 @@
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
             width: 100%;
             max-width: 1000px;
         }
@@ -48,9 +48,8 @@
         }
 
         .card-header h2 {
-            color: #fff;
-            font-weight: 600;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: #111827;
+            font-weight: 700;
         }
 
         .btn {
@@ -64,8 +63,9 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #111827;
+            color: #ffffff;
+            border: 1px solid #111827;
         }
 
         .btn-primary:hover {
@@ -74,9 +74,9 @@
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #f3f4f6;
+            color: #111827;
+            border: 1px solid #d1d5db;
         }
 
         .btn-secondary:hover {
@@ -86,42 +86,42 @@
 
         .btn-outline-primary {
             background: transparent;
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #111827;
+            border: 1px solid #111827;
         }
 
         .btn-outline-primary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+            background: #111827;
+            color: #ffffff;
         }
 
         .form-control {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
             border-radius: 10px;
-            color: #fff;
+            color: #111827;
             padding: 12px 15px;
         }
 
         .form-control:focus {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.4);
-            color: #fff;
-            box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1);
+            background: #ffffff;
+            border-color: #9ca3af;
+            color: #111827;
+            box-shadow: 0 0 0 0.25rem rgba(17, 24, 39, 0.08);
         }
 
         .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+            color: #9ca3af;
         }
 
         .form-label {
-            color: #fff;
-            font-weight: 500;
+            color: #111827;
+            font-weight: 600;
             margin-bottom: 8px;
         }
 
         .text-muted {
-            color: rgba(255, 255, 255, 0.6) !important;
+            color: #6b7280 !important;
         }
     </style>
 </head>

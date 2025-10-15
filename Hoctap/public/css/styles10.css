@@ -12,11 +12,12 @@ body {
 }
 
 .stats-header {
-    background: #96969b;
-    color: #fff;
+    background: #ffffff;
+    color: #111827;
+    border: 1px solid #e5e7eb;
     border-radius: 16px;
     padding: 24px;
-    box-shadow: 0 10px 25px rgba(102, 126, 234, .25);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .06);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -39,8 +40,8 @@ body {
 }
 
 .kpi-item {
-    background: rgba(255, 255, 255, .15);
-    border: 1px solid rgba(255, 255, 255, .25);
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
     padding: 12px 16px;
     border-radius: 12px;
     min-width: 160px;
@@ -163,7 +164,7 @@ body {
 .btn-primary {
     background: #111827;
     color: #fff;
-    border: none;
+    border: 1px solid #111827;
 }
 
 .btn-study {

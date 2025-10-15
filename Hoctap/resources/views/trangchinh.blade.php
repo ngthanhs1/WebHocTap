@@ -506,12 +506,26 @@ function toggleDropdown(event, topicId) {
     document.querySelectorAll('.dropdown-content').forEach(dropdown => {
         if (dropdown.id !== `dropdown-${topicId}`) {
             dropdown.classList.remove('show');
+            dropdown.classList.remove('drop-up');
         }
     });
     
     // Toggle dropdown hiện tại
     const dropdown = document.getElementById(`dropdown-${topicId}`);
     dropdown.classList.toggle('show');
+
+    // Sau khi hiển thị, kiểm tra nếu dropdown bị tràn ra ngoài viewport phía dưới
+    if (dropdown.classList.contains('show')) {
+        // reset trạng thái trước để đo chính xác
+        dropdown.classList.remove('drop-up');
+        const rect = dropdown.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - rect.top;
+        const requiredHeight = rect.height || dropdown.scrollHeight || 200;
+        if (spaceBelow < requiredHeight + 16) {
+            // không đủ chỗ bên dưới -> mở lên trên
+            dropdown.classList.add('drop-up');
+        }
+    }
 }
 
 function deleteTopic(topicId) {

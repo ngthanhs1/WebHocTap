@@ -755,7 +755,8 @@ body.dark-theme .search-highlight {
     background: white;
     border-radius: 12px;
     border: 1px solid #e5e7eb;
-    overflow: hidden;
+    /* Allow dropdown menus to overflow outside the list boundaries */
+    overflow: visible;
 }
 
 .activity-item {
@@ -947,6 +948,14 @@ body.dark-theme .search-highlight {
 
 .user-dropdown.show {
     display: block;
+}
+
+/* Generic dropdown content flip when near bottom */
+.dropdown-content.drop-up {
+    top: auto !important;
+    bottom: 100% !important;
+    margin-top: 0 !important;
+    margin-bottom: 5px !important;
 }
 
 .user-info {
