@@ -6,6 +6,15 @@
     <title>Kiểm tra - {{ $topic->name }}</title>
     <link rel="stylesheet" href="{{ asset('css/styles4.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .choice-item.selected { border-color: #000; background: #f9fafb; }
+        .answered { background: #000 !important; color: #fff !important; }
+        .choice-item { position: relative; }
+        .choice-item .choice-letter { transition: background .2s, color .2s; }
+        .choice-item.selected .choice-letter { background: #000 !important; color: #fff !important; }
+        .choice-item .choice-right { display: none; color: #10b981; margin-left: 12px; }
+        .choice-item.selected .choice-right { display: block; }
+    </style>
 </head>
 <body>
     <div class="main-content" style="max-width: 900px; margin: 32px auto;">
@@ -43,7 +52,7 @@
                 </div>
 
                 @foreach($topic->questions as $index => $question)
-                    <div style="background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 24px; margin-bottom: 24px;">
+                    <div class="question-card" style="background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 24px; margin-bottom: 24px;">
                         <div style="display: flex; align-items: center; margin-bottom: 16px;">
                             <div style="background: #000; color: #fff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px;">{{ $index + 1 }}</div>
                             <div style="font-size: 1.1rem; font-weight: 600; color: #222; flex: 1;">{{ $question->content }}</div>
@@ -51,8 +60,9 @@
                         <div style="margin-top: 12px;">
                             @foreach($question->choices as $choiceIndex => $choice)
                                 <div onclick="selectChoice({{ $question->id }}, {{ $choice->id }}, this)" style="display: flex; align-items: center; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 2px solid #e5e7eb; background: #fff; cursor: pointer; transition: all 0.3s;" class="choice-item">
-                                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #e0e0e0; color: #000; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px;">{{ chr(65 + $choiceIndex) }}</div>
+                                    <div class="choice-letter" style="width: 32px; height: 32px; border-radius: 50%; background: #e0e0e0; color: #000; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px;">{{ chr(65 + $choiceIndex) }}</div>
                                     <div style="flex: 1; font-size: 1rem;">{{ $choice->content }}</div>
+                                    <div class="choice-right"><i class="fas fa-check-circle"></i></div>
                                     <input type="radio" name="answers[{{ $question->id }}]" value="{{ $choice->id }}" class="choice-radio" style="display: none;">
                                 </div>
                             @endforeach

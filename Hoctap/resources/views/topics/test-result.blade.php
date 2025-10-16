@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kết quả kiểm tra - {{ $topic->name }}</title>
-    <link rel="stylesheet" href="{{ asset('css/styles2.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/styles4.css') }}">
     <link rel="stylesheet" href="{{ asset('css/styles9.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -117,7 +117,7 @@
                 Về trang chính
             </a>
             @if(session('stat_saved') !== null)
-                <a href="{{ route('thongke') }}" class="action-btn btn-primary" style="background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; border: none;">
+                <a href="{{ route('thongke') }}" class="action-btn btn-primary" style="background: linear-gradient(135deg, #e1e2e6ff, #c5c2c9ff); color: #fff; border: none;">
                     <i class="fas fa-chart-pie"></i>
                     Xem thống kê
                 </a>

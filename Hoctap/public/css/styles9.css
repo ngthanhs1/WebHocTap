@@ -6,23 +6,25 @@
 
 .result-header {
     text-align: center;
-    padding: 40px;
-    border-radius: 15px;
-    margin-bottom: 30px;
-    color: white;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    padding: 32px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    color: #111827;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .result-header.excellent {
-    background: linear-gradient(135deg, #10b981, #059669);
+    border-left: 6px solid #10b981;
 }
 
 .result-header.good {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
+    border-left: 6px solid #f59e0b;
 }
 
 .result-header.fair {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
+    border-left: 6px solid #ef4444;
 }
 
 .result-header h1 {
@@ -31,9 +33,10 @@
 }
 
 .score-display {
-    font-size: 4rem;
-    font-weight: bold;
-    margin: 20px 0;
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 16px 0;
+    color: #111827;
 }
 
 .result-stats {
@@ -54,12 +57,12 @@
 }
 
 .question-review {
-    background: white;
-    border-radius: 15px;
-    padding: 25px;
-    margin-bottom: 25px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e0e7ff;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb;
 }
 
 .question-header {
@@ -83,11 +86,11 @@
 }
 
 .question-number.correct {
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: #10b981;
 }
 
 .question-number.incorrect {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
+    background: #ef4444;
 }
 
 .question-text {
@@ -125,42 +128,47 @@
 }
 
 .choice-item.correct-answer {
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: white;
-    border-color: #059669;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    background: #ecfdf5;
+    color: #065f46;
+    border-color: #10b981;
+    box-shadow: none;
 }
 
 .choice-item.user-wrong {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-    color: white;
-    border-color: #dc2626;
-    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    background: #fef2f2;
+    color: #7f1d1d;
+    border-color: #ef4444;
+    box-shadow: none;
 }
 
 .choice-item.not-selected {
     background: #f9fafb;
-    border-color: #d1d5db;
+    border-color: #e5e7eb;
     color: #6b7280;
 }
 
 .choice-letter {
-    width: 35px;
-    height: 35px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background: #6b7280;
-    color: white;
+    background: #e5e7eb;
+    color: #111827;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    margin-right: 15px;
+    font-weight: 700;
+    margin-right: 12px;
     flex-shrink: 0;
 }
 
-.choice-item.correct-answer .choice-letter,
+.choice-item.correct-answer .choice-letter {
+    background: #10b981;
+    color: #ffffff;
+}
+
 .choice-item.user-wrong .choice-letter {
-    background: rgba(255, 255, 255, 0.3);
+    background: #ef4444;
+    color: #ffffff;
 }
 
 .choice-text {
@@ -182,47 +190,50 @@
 }
 
 .action-btn {
-    padding: 15px 25px;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: bold;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: .95rem;
+    font-weight: 600;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    transition: all 0.3s ease;
-    border: none;
+    transition: all .2s ease;
+    border: 1px solid #e5e7eb;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    background: #fff;
+    color: #111827;
 }
 
 .action-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
+    background: #ffffff;
+    color: #111827;
 }
 
 .btn-study {
-    background: linear-gradient(135deg, #4ecdc4, #44a08d);
-    color: white;
+    background: #ffffff;
+    color: #111827;
 }
 
 .btn-retake {
-    background: linear-gradient(135deg, #f093fb, #f5576c);
-    color: white;
+    background: #ffffff;
+    color: #111827;
 }
 
 .summary-card {
-    background: white;
-    border-radius: 15px;
-    padding: 25px;
-    margin-bottom: 30px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     text-align: center;
+    border: 1px solid #e5e7eb;
 }
 
 .performance-indicator {
