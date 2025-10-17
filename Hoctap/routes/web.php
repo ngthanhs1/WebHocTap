@@ -18,10 +18,15 @@ Route::get('/login',  [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\QuickPasswordController;
 
 Route::get('/logout', [RegisterController::class, 'showForm'])->name('logout');
 Route::post('/logout', [RegisterController::class, 'register'])->name('logout.post');
 Route::post('/signout',[AuthController::class, 'logout'])->name('signout');
+
+// Quick password reset (email + new password)
+Route::get('/quick-reset', [QuickPasswordController::class, 'showForm'])->name('quick-password.request');
+Route::post('/quick-reset', [QuickPasswordController::class, 'update'])->middleware('throttle:6,1')->name('quick-password.update');
 
 // Route cho trang chính
 Route::get('/trangchinh', [TrangChinhController::class, 'index'])->middleware('auth')->name('trangchinh');

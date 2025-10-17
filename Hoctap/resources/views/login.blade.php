@@ -34,6 +34,9 @@
         <label style="display:flex;gap:8px;align-items:center;margin:6px 0 12px;">
             <input type="checkbox" name="remember" value="1"> Ghi nhớ đăng nhập
         </label>
+        <div style="text-align:right;margin:-4px 0 12px;">
+            <a href="{{ route('quick-password.request') }}" style="font-size:14px; color:#111827; text-decoration:underline;">Đổi mật khẩu</a>
+        </div>
     <button type="submit" class="login-btn" style="color: #ffffff;">Đăng nhập</button>
     </form>
 
