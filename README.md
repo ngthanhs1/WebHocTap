@@ -5,20 +5,31 @@
 # Demo dự án
 
 ## Login
-![alt](https://github.com/ngthanhs1/WebHocTap/blob/main/img/login.png)
+<img src="img/login.png">
+
 ## Đăng ký
-![alt](https://github.com/ngthanhs1/WebHocTap/blob/main/img/dangky.png)
+<img src="img/dangky.png">
+
 ## Đổi mật khẩu
-![alt](https://github.com/ngthanhs1/WebHocTap/blob/main/img/mk.png)
+<img src="img/mk.png">
+
 ## Trang chính
-![alt](https://github.com/ngthanhs1/WebHocTap/blob/main/img/trangchinh.png)
+<img src="img/mk.png">
+
 ## Chủ đề
-![alt](https://github.com/ngthanhs1/WebHocTap/blob/main/img/chudeww.png)
+<img src="img/chudeww.png">
+
 ## Câu hỏi
-![alt](https://github.com/ngthanhs1/WebHocTap/blob/main/img/cauhoi.png)
+<img src="img/cauho.png">
+
 ## Tạo chủ đề
-![alt](https://github.com/ngthanhs1/WebHocTap/blob/main/img/taochude.png)
+<img src="img/taochude.png">
+
 ## Kiểm tra
-![alt](https://github.com/ngthanhs1/WebHocTap/blob/main/img/kiemtra.png)
+<img src="img/kiemtra.png">
+
 ## Thống kê
-![alt](https://github.com/ngthanhs1/WebHocTap/blob/main/img/thongke.png)
+<img src="img/thongke.png">
+
+## Link Youtube Demo
+https://youtu.be/OIkAXJYQ7qQ?si=IvmpMLqySY3ic8vX
