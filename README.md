@@ -19,6 +19,6 @@
 ## Tạo chủ đề
 ![alt](https://github.com/ngthanhs1/WebHocTap/blob/main/img/taochude.png)
 ## Kiểm tra
-![alt](https://github.com/ngthanhs1/WebHocTap/blob/main/img/.png)
+![alt](https://github.com/ngthanhs1/WebHocTap/blob/main/img/kiemtra.png)
 ## Thống kê
 ![alt](https://github.com/ngthanhs1/WebHocTap/blob/main/img/thongke.png)
