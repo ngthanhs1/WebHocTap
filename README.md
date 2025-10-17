@@ -17,7 +17,7 @@
 <img src="img/chudeww.png">
 
 ## Câu hỏi
-<img src="img/cauho.png">
+<img src="img/cauhoi.png">
 
 ## Tạo chủ đề
 <img src="img/taochude.png">
